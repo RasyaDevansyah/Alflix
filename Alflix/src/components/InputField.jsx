@@ -3,10 +3,14 @@ const InputField = ({ type, placeholder, icon: Icon, label }) => {
         <div>
             <p className="mb-1 text-4l font-bold">{label}</p>
             <div className="relative">
-                <Icon
-                    color="black"
-                    className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500"
-                />
+
+                {Icon && (
+                    <Icon
+                        color="black"
+                        className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500"
+                    />
+                )}
+
                 <input
                     type={type}
                     placeholder={placeholder}
