@@ -1,5 +1,6 @@
 import AlflixLogo from "../components/AlflixLogo"
 import beautyAndTheBeast from '/src/assets/BeautyAndTheBeast.jpeg';
+import joker from '/src/assets/MoviePosters/Joker.png';
 
 function HomePage() {
 
@@ -49,21 +50,35 @@ function HomePage() {
 
             {/* Trending Section */}
             <div className="flex-col justify-center h-[801px]">
-                <h1 className="text-4xl font-bold ml-8 my-8 tracking-[0.15em]">TRENDING NOW</h1>
+                <h1 className="text-4xl font-bold ml-20 my-8 tracking-[0.15em]">TRENDING NOW</h1>
 
                 {/* Trending Row */}
                 <div className="flex justify-center">
                     <div className="flex bg-[#302E3B] w-11/12 max-h-[600px] rounded-lg overflow-hidden"> {/* Rounded corners */}
                         {/* Movie Cards */}
-                        <div className="flex justify-between w-full p-6 "> {/* Add gap between cards and padding */}
+                        <div className="flex justify-evenly w-full py-4 "> {/* Add gap between cards and padding */}
                             {/* Movie Card 1 */}
-                            <div className="w-80 h-120 bg-gray-700 rounded-lg"></div>
-                            {/* Movie Card 2 */}
-                            <div className="w-80 h-120 bg-gray-700 rounded-lg"></div>
-                            {/* Movie Card 3 */}
-                            <div className="w-80 h-120 bg-gray-700 rounded-lg"></div>
-                            {/* Movie Card 4 */}
-                            <div className="w-80 h-120 bg-gray-700 rounded-lg"></div>
+                            <div className="w-70 h-105 bg-gray-700 rounded-lg">
+                                <div className="flex-col items-center" >
+                                    <div className="w-3/4 h-auto">
+                                        <img src={joker} alt="The Joker" className="w-full h-auto" />
+                                    </div>
+                                    <div>
+                                        <p>JOKER</p>
+                                        <p>{"Watch >"}</p>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                            <div className="w-70 h-105 bg-gray-700 rounded-lg"></div>
+
+                            <div className="w-70 h-105 bg-gray-700 rounded-lg"></div>
+
+                            <div className="w-70 h-105 bg-gray-700 rounded-lg"></div>
+
 
                         </div>
                     </div>
