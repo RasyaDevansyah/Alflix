@@ -3,11 +3,27 @@ import { IoMail } from "react-icons/io5";
 import InputField from "../components/InputField";
 import AlflixLogo from "../components/AlflixLogo";
 import SubmitButton from "../components/SubmitButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 function SignUpPage() {
+    const navigate = useNavigate();
 
+    const SignUp = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const username = formData.get("username");
+        const email = formData.get("email");
+        const password = formData.get("password");
+        const cornfirmPassword = formData.get("confirm password");
+        
+        console.log("Username:", username);
+        console.log("email:", email);
+        console.log("Password:", password);
+        console.log("Confirm Password:", cornfirmPassword);
+        
+        navigate("/home")
+    }
 
     return (
         <div className="min-h-screen text-white flex">
@@ -26,26 +42,30 @@ function SignUpPage() {
                     <hr className="mt-2 mb-7 w-2/11" />
                 </div>
 
-                <form action="">
+                <form action="" onSubmit={SignUp}>
                     <InputField
+                        name = "username"
                         type="text"
                         placeholder="Username"
                         icon={FaUser}
                         label="USERNAME"
                     />
                     <InputField
+                        name = "email"
                         type="email"
                         placeholder="@gmail.com"
                         icon={IoMail}
                         label="E-MAIL ADDRESS"
                     />
                     <InputField
+                        name = "password"
                         type="password"
                         placeholder="8-16 Characters"
                         label="PASSWORD"
                     />
 
                     <InputField
+                        name = "confirm password"
                         type="password"
                         placeholder="◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦"
                         icon={FaLock}

@@ -2,13 +2,27 @@ import { FaUser, FaLock } from "react-icons/fa";
 import InputField from "../components/InputField";
 import AlflixLogo from "../components/AlflixLogo";
 import SubmitButton from "../components/SubmitButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
+
 
 function SignInPage() {
+    const navigate = useNavigate();
+
+    const SignIn = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const username = formData.get("username");
+        const password = formData.get("password");
+        
+        console.log("Username:", username);
+        console.log("Password:", password);
+        
+        navigate("/home")
+
+    }
 
     return (
         <div className="min-h-screen text-white flex">
-
             {/* Left Side */}
             <div className="w-1/2 bg-[#1e1e2a] flex justify-center items-center">
                 {/* <h1 className="text-6xl font-bold">Welcome Back!</h1> */}
@@ -24,14 +38,16 @@ function SignInPage() {
                     <hr className="mt-2 mb-7 w-2/11" />
                 </div>
 
-                <form action="">
+                <form action="" onSubmit={SignIn}>
                     <InputField
+                        name = "username"
                         type="text"
                         placeholder="Username"
                         icon={FaUser}
                         label="USERNAME"
                     />
                     <InputField
+                        name = "password"
                         type="password"
                         placeholder="Enter password..."
                         icon={FaLock}
