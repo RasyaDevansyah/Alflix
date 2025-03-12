@@ -32,7 +32,7 @@ function HomePage() {
 
 
             <div className="banner">
-                <p>bannerrrrrrrrrrrrrrr</p>
+                <p>banner</p>
             </div>
 
             <div className="trendingsection">
