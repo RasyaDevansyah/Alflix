@@ -7,16 +7,13 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
 
   return (
-    <Router>
       <main>
         <Routes>
           <Route path="/" element={<SignInPage />} />
           <Route path="/SignUp" element={<SignUpPage />} />
           <Route path="/Home" element={<HomePage />} />
-          <Route />
         </Routes>
       </main>
-    </Router>
 
   )
 }
