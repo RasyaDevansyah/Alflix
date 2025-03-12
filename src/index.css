@@ -1,1 +1,10 @@
+@font-face {
+    font-family: Libre-Franklin;
+    src: url("../src/assets/fonts/LibreFranklin-VariableFont_wght.ttf");
+}
+
 @import "tailwindcss";
+
+@theme{
+    --font-libre-franklin : Libre-Franklin, "sans-serif";
+}
