@@ -1,15 +1,15 @@
 {
-  "homepage": "https://RasyaDevansyah.github.io/Alflix",
+  "homepage": "https://RasyaDevansyah.github.io/Alflix/",
   "name": "alflix",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
     "build": "vite build",
     "lint": "eslint .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview"
   },
   "dependencies": {
