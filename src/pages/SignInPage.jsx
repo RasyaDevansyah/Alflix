@@ -5,6 +5,11 @@ import SubmitButton from "../components/SubmitButton";
 import { Link, useNavigate} from "react-router-dom";
 
 
+import GoogleLogo from '/src/assets/Google Logo.png';
+import FacebookLogo from '/src/assets/FacebookLogo.png';
+import MicrosoftLogo from '/src/assets/MicrosoftLogo.webp';
+
+
 function SignInPage() {
     const navigate = useNavigate();
 
@@ -73,9 +78,9 @@ function SignInPage() {
                     </div>
 
                     <div className="flex items center justify-center">
-                        <img src="..\src\assets\Google Logo.png" alt="Google Logo" className="w-1/7 h-auto mx-5" />
-                        <img src="..\src\assets\FacebookLogo.png" alt="Facebook Logo" className="w-1/7 h-auto mx-5" />
-                        <img src="..\src\assets\MicrosoftLogo.webp" alt=" Microsoft Logo" className="w-1/7 h-auto mx-5" />
+                        <img src={GoogleLogo} alt="Google Logo" className="w-1/7 h-auto mx-5" />
+                        <img src={FacebookLogo} alt="Facebook Logo" className="w-1/7 h-auto mx-5" />
+                        <img src={MicrosoftLogo} alt=" Microsoft Logo" className="w-1/7 h-auto mx-5" />
                     </div>
                 </div>
             </div>
