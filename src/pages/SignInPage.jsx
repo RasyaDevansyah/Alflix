@@ -1,7 +1,7 @@
 import { FaUser, FaLock } from "react-icons/fa";
-import InputField from "../components/InputField";
+import InputField from "../components/SignInAndSignOut/InputField";
+import SubmitButton from "../components/SignInAndSignOut/SubmitButton";
 import AlflixLogo from "../components/AlflixLogo";
-import SubmitButton from "../components/SubmitButton";
 import { Link, useNavigate} from "react-router-dom";
 
 
