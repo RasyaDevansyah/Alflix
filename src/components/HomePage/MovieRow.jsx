@@ -2,25 +2,24 @@ import React, { useRef, useState } from "react";
 import MovieCard from "./MovieCard";
 
 function MovieRow({ title, movies }) {
-    const [scrollPosition, setScrollPosition] = useState(0);
     const movieRowRef = useRef(null);
 
     const handleScroll = (direction) => {
         const container = movieRowRef.current;
-        const scrollAmount = 300; // Adjust this value to control how much to scroll
+        const scrollAmount = 1360; // Adjust this value to control how much to scroll
 
         if (direction === "prev") {
+            // Scroll to the left
             container.scrollTo({
-                left: scrollPosition - scrollAmount,
+                left: container.scrollLeft - scrollAmount,
                 behavior: "smooth",
             });
-            setScrollPosition((prev) => Math.max(prev - scrollAmount, 0));
         } else if (direction === "next") {
+            // Scroll to the right
             container.scrollTo({
-                left: scrollPosition + scrollAmount,
+                left: container.scrollLeft + scrollAmount,
                 behavior: "smooth",
             });
-            setScrollPosition((prev) => prev + scrollAmount);
         }
     };
 
@@ -51,7 +50,7 @@ function MovieRow({ title, movies }) {
 
                 <div
                     ref={movieRowRef}
-                    className="flex overflow-x-auto gap-10 px-12 scrollbar-hide"
+                    className="flex overflow-x-auto gap-25 px-12 scrollbar-hide"
                 >
                     {movies.map((movie, index) => (
                         <MovieCard

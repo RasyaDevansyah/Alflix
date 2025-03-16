@@ -36,12 +36,20 @@ function HomePage() {
         { title: "ONE PIECE: RED", imgSource: onePiece },
         { title: "LUCA", imgSource: luca },
         { title: "CINDERELLA", imgSource: cinderella },
+        { title: "CINDERELLA", imgSource: cinderella },
+        { title: "CINDERELLA", imgSource: cinderella },
+        { title: "CINDERELLA", imgSource: cinderella },
+        { title: "CINDERELLA", imgSource: cinderella },
     ];
 
     const animeSeriesMovies = [
         { title: "HUNTER X HUNTER", imgSource: hunterXHunter },
         { title: "MOB PSYCHO 100", imgSource: mobPyscho },
         { title: "BLUE LOCK", imgSource: blueLock },
+        { title: "FAIRY TAIL", imgSource: fairyTail },
+        { title: "FAIRY TAIL", imgSource: fairyTail },
+        { title: "FAIRY TAIL", imgSource: fairyTail },
+        { title: "FAIRY TAIL", imgSource: fairyTail },
         { title: "FAIRY TAIL", imgSource: fairyTail },
     ];
 
