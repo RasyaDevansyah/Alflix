@@ -21,6 +21,10 @@ import MovieRow from '../components/HomePage/MovieRow';
 import Footer from '../components/Footer';
 
 function HomePage() {
+
+
+    // INI PERUBAHAN BARUUUUUUUUU
+
     const watchHistoryMovies = [
         { title: "AVENGERS", imgSource: avengers },
         { title: "VENOM", imgSource: venom },
