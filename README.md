@@ -17,7 +17,7 @@ Currently, two official plugins are available:
 ### Installation
 1. Clone the repository:
 ```bash
-   git clone <repository-url>
+   git clone https://github.com/RasyaDevansyah/Alflix
 ```
 
 2. Navigate to the project directory:
