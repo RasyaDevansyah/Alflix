@@ -24,6 +24,7 @@ function HomePage() {
 
 
     // INI PERUBAHAN BARUUUUUUUUU
+    // haloooo
 
     const watchHistoryMovies = [
         { title: "AVENGERS", imgSource: avengers },
