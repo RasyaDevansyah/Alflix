@@ -1,5 +1,5 @@
 import Navbar from "../components/HomePage/Navbar"
-
+import PlayBanner from "../components/VideoInfoPage/PlayBanner"
 import Footer from "../components/Footer"
 
 
@@ -11,9 +11,7 @@ function VideoInfoPage(){
             <Navbar/>
 
             {/* Banner */}
-            <div>
-
-            </div>
+            <PlayBanner/>
 
             {/* Title Section */}
             <div>
