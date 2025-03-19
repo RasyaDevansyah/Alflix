@@ -28,7 +28,7 @@ function VideoInfoPage() {
                         <img
                             src={beautyAndTheBeast}
                             alt="Beauty and the beast picture"
-                            className="absolute top-0 left-0 w-full h-full object-cover"
+                            className="absolute w-full h-full object-cover"
                         />
                     </div>
                 </div>
@@ -51,18 +51,27 @@ function VideoInfoPage() {
             </div>
 
             {/* Description Section */}
-            <div className="flex py-8 px-24 h-40">
-                {/* Left Side */}
-                <div>
-
+            <div className="flex pb-8 px-24 tracking-[0.15em] gap-8">
+                {/* Left Side - 3 times the width of the right side */}
+                <div className="w-3/4"> {/* 75% width */}
+                    <p className="text-xl font-bold mb-3">Description:</p>
+                    <p className="text-xl leading-[1.6] font-light">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
                 </div>
 
-                {/* Right Side */}
-                <div>
-                    
+                {/* Vertical Line */}
+                <div className="w-px bg-white/80 h-40 self-center"></div>
+
+                {/* Right Side - 1/4 width */}
+                <div className="w-1/4 pl-8 flex items-center justify-center"> {/* Center content vertically and horizontally */}
+                    <p className="text-3xl italic font-bold leading-[1.6]">
+                        “Come and<br />
+                        see the<br />
+                        magic<br />
+                        bestowed.”
+                    </p>
                 </div>
-
-
             </div>
 
 
