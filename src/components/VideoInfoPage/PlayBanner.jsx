@@ -1,11 +1,11 @@
-import beautyAndTheBeast from '/src/assets/BeautyAndTheBeast.jpeg';
+import beautyAndTheBeast2 from '/src/assets/BeautyAndTheBeast2.png';
 
 function PlayBanner() {
     return (
         <div className="relative">
             <div className="max-h-[801px] overflow-hidden">
                 <img
-                    src={beautyAndTheBeast}
+                    src={beautyAndTheBeast2}
                     alt="Beauty and the Beast"
                     className="w-full h-auto object-cover"
                 />
