@@ -9,10 +9,26 @@
     --font-libre-franklin : Libre-Franklin, "sans-serif";
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
+
+/* Custom Scrollbar Styles */
+
+.custom-scrollbar::-webkit-scrollbar {
+    height: 12px; /* Height of the scrollbar */
 }
-.scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #797993; /* Background color of the track */
+    border-radius: 6px; /* Rounded corners */
+    
+}
+
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #6358D3; /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners */
+}
+
+/* Remove hover effect */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6358D3; /* Same color as the thumb */
 }
