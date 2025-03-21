@@ -5,6 +5,8 @@ import Footer from "../components/Footer"
 
 import beautyAndTheBeast from '/src/assets/BeautyAndTheBeast.jpeg';
 
+import CastCard from "../components/VideoInfoPage/CastCard";
+import EmmaWatson from '/src/assets/MovieCasts/Emma Watson.png';
 
 
 function VideoInfoPage() {
@@ -76,7 +78,43 @@ function VideoInfoPage() {
 
 
             {/* Cast Section */}
-            <div>
+            <div className="px-24">
+                <p className="text-xl font-bold mb-3">Starring:</p>
+
+                {/* Carousell CastCards */}
+                <div className="flex gap-6">
+                    {/* CastCard1 */}
+                    <CastCard
+                        imageSrc={EmmaWatson}
+                        castName="Emma Watson"
+                        characterName="Belle"
+                    />
+                    <CastCard
+                        imageSrc={EmmaWatson}
+                        castName="Emma Watson"
+                        characterName="Belle"
+                    />
+                    <CastCard
+                        imageSrc={EmmaWatson}
+                        castName="Emma Watson"
+                        characterName="Belle"
+                    />
+                    <CastCard
+                        imageSrc={EmmaWatson}
+                        castName="Emma Watson"
+                        characterName="Belle"
+                    />
+                    <CastCard
+                        imageSrc={EmmaWatson}
+                        castName="Emma Watson"
+                        characterName="Belle"
+                    />
+
+
+                </div>
+
+
+
 
             </div>
 
