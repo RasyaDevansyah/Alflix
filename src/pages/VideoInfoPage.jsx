@@ -1,11 +1,21 @@
 import Navbar from "../components/HomePage/Navbar"
 import PlayBanner from "../components/VideoInfoPage/PlayBanner"
+import CastCard from "../components/VideoInfoPage/CastCard";
+import MovieCardLandscape from "../components/VideoInfoPage/MovieCardLandscape";
 import Footer from "../components/Footer"
+
 
 import beautyAndTheBeast from '/src/assets/BeautyAndTheBeast.jpeg';
 
-import CastCard from "../components/VideoInfoPage/CastCard";
 import EmmaWatson from '/src/assets/MovieCasts/Emma Watson.png';
+import DanStevens from '/src/assets/MovieCasts/Dan Stevens.png';
+import LukeEvans from '/src/assets/MovieCasts/Luke Evans.png';
+import EwanMcGregor from '/src/assets/MovieCasts/Ewan McGregor.png';
+import EmmaThomson from '/src/assets/MovieCasts/Emma Thompson.png';
+
+import Aladin from '/src/assets/MoviePostersLandscape/Aladin.jpeg'
+import LionKing from '/src/assets/MoviePostersLandscape/Lion King.png'
+import SnowWhite from '/src/assets/MoviePostersLandscape/SnowWhite.png'
 
 function VideoInfoPage() {
 
@@ -74,32 +84,66 @@ function VideoInfoPage() {
                         characterName="Belle"
                     />
                     <CastCard
-                        imageSrc={EmmaWatson}
-                        castName="Emma Watson"
-                        characterName="Belle"
+                        imageSrc={DanStevens}
+                        castName="Dan Stevens"
+                        characterName="Beast"
                     />
                     <CastCard
-                        imageSrc={EmmaWatson}
-                        castName="Emma Watson"
-                        characterName="Belle"
+                        imageSrc={LukeEvans}
+                        castName="Luke Evans"
+                        characterName="Gaston"
                     />
                     <CastCard
-                        imageSrc={EmmaWatson}
-                        castName="Emma Watson"
-                        characterName="Belle"
+                        imageSrc={EwanMcGregor}
+                        castName="Ewan McGregor"
+                        characterName="Lumiere"
                     />
                     <CastCard
-                        imageSrc={EmmaWatson}
-                        castName="Emma Watson"
-                        characterName="Belle"
+                        imageSrc={EmmaThomson}
+                        castName="Emma Thomson"
+                        characterName="Mrs. Potts"
                     />
                 </div>
 
             </div>
 
             {/* More Like this Section */}
-            <div>
-                {/* Add content here */}
+            <div className="pb-22 px-24">
+                <p className="text-xl font-bold mb-3 tracking-[0.15em]">More Like This:</p>
+                <div
+                    className="flex gap-10 overflow-x-clip py-2 custom-scrollbar "
+                >
+                    <MovieCardLandscape
+                        imageSrc={SnowWhite}
+                        movieTitle="SNOW WHITE"
+                    />
+                    <MovieCardLandscape
+                        imageSrc={Aladin}
+                        movieTitle="ALADIN"
+                    />
+                    <MovieCardLandscape
+                        imageSrc={LionKing}
+                        movieTitle="LION KING"
+                    />
+
+                    <div className="flex items-center justify-center h-48 w-30">
+
+                        <div className="flex flex-col items-center">
+                            <button
+                                type="button"
+                                className=" bg-gray-600 text-white rounded-full w-20 h-20 flex items-center justify-center hover:bg-gray-700 transition-colors text-7xl font-bold"
+                                aria-label=""
+                            >
+                                &gt;
+                            </button>
+                            <p className="font-bold text-xl">more</p>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
             </div>
 
             <Footer />
