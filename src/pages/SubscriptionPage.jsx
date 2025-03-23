@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; 
 import Navbar from "../components/HomePage/Navbar"; 
 
 const SubscriptionPlans = () => {
+  const navigate = useNavigate(); 
+
   const plans = [
     {
       title: "Family Premium",
@@ -54,7 +57,10 @@ const SubscriptionPlans = () => {
               <p className="text-gray-500 line-through">{plan.oldPrice}</p>
               <p className="text-2xl font-bold">{plan.newPrice} <span className="text-sm text-green-400">{plan.discount}</span></p>
             </div>
-            <button className="mt-6 bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-6 rounded-lg w-full">
+            <button 
+              className="mt-6 bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-6 rounded-lg w-full"
+              onClick={() => navigate("/payment")} 
+            >
               SELECT
             </button>
           </div>
