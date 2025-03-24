@@ -19,7 +19,7 @@ import Banner from '../components/HomePage/Banner';
 import TrendingSection from '../components/HomePage/TrendingSection';
 import MovieRow from '../components/HomePage/MovieRow';
 import Footer from '../components/Footer';
-import SearchBar from '../components/Search/SearchBar.Jsx';
+import SearchBar from '../components/Search/SearchBar.jsx';
 
 function HomePage() {
 
