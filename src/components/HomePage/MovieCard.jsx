@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const MovieCard = ({ movieTitle, imgSource, number }) => {
     return (
         <div className="w-60 h-106 relative flex-shrink-0"> {/* Adjusted width and height */}
@@ -22,7 +24,10 @@ const MovieCard = ({ movieTitle, imgSource, number }) => {
                 {/* Movie Title and Watch Link */}
                 <div className="w-full mt-4 text-left tracking-[0.15em] pl-2">
                     <p className="text-white font-bold">{movieTitle}</p>
-                    <p className="text-violet-500">{"Watch >"}</p>
+
+                    <Link to="/VideoInfoPage" className="text-violet-500">
+                        {"Watch >"}
+                    </Link>
                 </div>
             </div>
         </div>
