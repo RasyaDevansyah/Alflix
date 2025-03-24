@@ -1,6 +1,7 @@
 // import AlflixLogo from "./AlflixLogo";
 import AlflixLogo from "../AlflixLogo";
 import { FaBell, FaUser } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Navbar() {
     return (
@@ -11,7 +12,9 @@ function Navbar() {
                 <div className="h-9 w-px bg-white mx-4"></div>
                 <p className="mx-4 text-xl font-bold tracking-[0.15em]">HOME</p>
                 <p className="mx-4 text-xl font-bold tracking-[0.15em]">BROWSE</p>
-                <p className="mx-4 text-xl font-bold tracking-[0.15em]">SUBSCRIPTION</p>
+                <Link to="/Subscription" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
+                    SUBSCRIPTION
+                </Link>
             </div>
 
             {/* Navbar Right */}
