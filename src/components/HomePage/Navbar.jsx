@@ -10,7 +10,9 @@ function Navbar() {
             <div className="flex items-center">
                 <AlflixLogo type='2' className="w-1/5 h-auto mr-4 ml-3" />
                 <div className="h-9 w-px bg-white mx-4"></div>
-                <p className="mx-4 text-xl font-bold tracking-[0.15em]">HOME</p>
+                <Link to="/Home" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
+                    HOME
+                </Link>
                 <p className="mx-4 text-xl font-bold tracking-[0.15em]">BROWSE</p>
                 <Link to="/Subscription" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
                     SUBSCRIPTION
