@@ -19,13 +19,10 @@ import Banner from '../components/HomePage/Banner';
 import TrendingSection from '../components/HomePage/TrendingSection';
 import MovieRow from '../components/HomePage/MovieRow';
 import Footer from '../components/Footer';
+import SearchBar from '../components/Search/SearchBar.Jsx';
 
 function HomePage() {
 
-
-    // INI PERUBAHAN BARUUUUUUUUU
-    // haloooo
-    // test
 
     const watchHistoryMovies = [
         { title: "AVENGERS", imgSource: avengers },
@@ -62,6 +59,7 @@ function HomePage() {
     return (
         <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">
             <Navbar />
+            <SearchBar />
             <Banner />
             <TrendingSection />
             <div className="flex-col justify-center mx-20">
