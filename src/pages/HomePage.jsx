@@ -20,8 +20,13 @@ import TrendingSection from '../components/HomePage/TrendingSection';
 import MovieRow from '../components/HomePage/MovieRow';
 import Footer from '../components/Footer';
 import SearchBar from '../components/Search/SearchBar.jsx';
+import SearchResult from '../components/Search/SearchResult.jsx';
+
+import { useState } from 'react';
 
 function HomePage() {
+    const [result, setResult] = useState([]);
+    const [isSearchActive, setIsSearchActive] = useState(false);
 
 
     const watchHistoryMovies = [
@@ -57,9 +62,12 @@ function HomePage() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">
+        <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin relative">
             <Navbar />
-            <SearchBar />
+            <div className="absolute top-4 right-4 flex flex-col items-end space-y-2">
+                <SearchBar searchResult={setResult} setIsSearchActive={setIsSearchActive}/>
+                {isSearchActive && <SearchResult result={result} />}
+            </div>
             <Banner />
             <TrendingSection />
             <div className="flex-col justify-center mx-20">
