@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/HomePage/Navbar"; 
-import { FaUser, FaLock, FaSearch, FaCreditCard } from "react-icons/fa";
+import { FaUser, FaLock, FaCreditCard } from "react-icons/fa";
 
 const PaymentPage = () => {
+  const navigate = useNavigate();
+
   const [selectedMethod, setSelectedMethod] = useState("credit");
   const [formData, setFormData] = useState({
     username: "",
@@ -28,7 +31,13 @@ const PaymentPage = () => {
       alert("You must agree to the terms and conditions.");
       return;
     }
+
     console.log("Processing Payment:", formData);
+
+    
+    setTimeout(() => {
+      navigate("/payment-success");
+    }, 1000); 
   };
 
   return (
