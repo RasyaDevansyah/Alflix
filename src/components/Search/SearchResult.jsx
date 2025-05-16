@@ -7,9 +7,11 @@
           {result.length === 0 ? (
             <p className="text-center text-gray-400 py-4">No results found.</p>
           ) : (
-            result.map((title, idx) => (
+            result.map((movie, idx) => (
               <Link key={idx} to="/VideoInfoPage" className='flex flex-row items-center w-full h-14 bg-gray-800 rounded-lg mt-2 shadow-lg px-4\'>
-                  <span className='flex justify-center w-full text-white font-bold hover:text-purple-400 hover:underline'>{title}</span>
+                <span className='flex w-full items-center text-white font-bold hover:text-purple-400 hover:underline hover:bg-gray-700 rounded-lg'>
+                  <img src={movie.imgSource} alt={movie.title} className='w-10 h-10 rounded-lg mr-2' />
+                  {movie.title}</span>
               </Link>
             ))
           )}

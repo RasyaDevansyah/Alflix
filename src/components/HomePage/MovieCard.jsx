@@ -5,7 +5,7 @@ const MovieCard = ({ movieTitle, imgSource, number }) => {
         <div className="w-60 h-106 relative flex-shrink-0"> {/* Adjusted width and height */}
             {/* Number Badge */}
             {number && (
-                <div className="absolute -top-8 -left-2 z-10 text-white text-8xl font-bold">
+                <div className="absolute top-0 left-2 z-10 text-white text-2xl font-bold">
                     {number}
                 </div>
             )}
