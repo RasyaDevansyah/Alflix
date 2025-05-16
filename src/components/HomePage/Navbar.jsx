@@ -13,7 +13,9 @@ function Navbar() {
                 <Link to="/Home" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
                     HOME
                 </Link>
-                <p className="mx-4 text-xl font-bold tracking-[0.15em]">BROWSE</p>
+                <Link to="/BrowsePage" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
+                    BROWSE
+                </Link>
                 <Link to="/Subscription" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
                     SUBSCRIPTION
                 </Link>

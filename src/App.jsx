@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import SubscriptionPage from "./pages/SubscriptionPage"; 
 import PaymentPage from "./pages/PaymentPage";
 import VideoInfoPage from './pages/VideoInfoPage';
+import BrowsePage from './pages/BrowsePage';
 
 // import { Route, Routes } from 'react-router-dom';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
@@ -20,7 +21,7 @@ function App() {
           <Route path="/Subscription" element={<SubscriptionPage />} />
           <Route path="/Payment" element={<PaymentPage />} /> 
           <Route path="/VideoInfoPage" element={<VideoInfoPage />} /> 
-
+          <Route path="/BrowsePage" element={<BrowsePage />} />
         </Routes>
       </main>
 

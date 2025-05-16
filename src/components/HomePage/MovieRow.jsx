@@ -57,6 +57,7 @@ function MovieRow({ title, movies }) {
                             key={index}
                             movieTitle={movie.title}
                             imgSource={movie.imgSource}
+                            number={index + 1} // Pass the index as a number prop
                         />
                     ))}
                 </div>
