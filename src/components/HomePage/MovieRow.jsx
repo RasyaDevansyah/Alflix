@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
 
-function MovieRow({ title, movies }) {
+function MovieRow({ title, movies, viewAllLink }) {
     const movieRowRef = useRef(null);
 
     const handleScroll = (direction) => {
@@ -29,12 +30,12 @@ function MovieRow({ title, movies }) {
             <div className="flex justify-between items-center mb-5 px-16">
                 <h3 className="text-xl font-bold tracking-[0.18em]">{title}</h3>
                 <hr className="flex-grow mx-4 border-t border-gray-600" />
-                <button
-                    type="button"
-                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-violet-600 transition-colors h-10"
+                <Link
+                    to={viewAllLink}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-violet-600 transition-colors h-10 flex items-center"
                 >
                     View All
-                </button>
+                </Link>
             </div>
 
             {/* Movie Row with Carousel Buttons */}
@@ -57,6 +58,7 @@ function MovieRow({ title, movies }) {
                             key={index}
                             movieTitle={movie.title}
                             imgSource={movie.imgSource}
+                            number={index + 1} // Pass the index as a number prop
                         />
                     ))}
                 </div>

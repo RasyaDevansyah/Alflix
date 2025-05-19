@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import avengers from '/src/assets/MoviePosters/Avengers.png';
 import venom from '/src/assets/MoviePosters/Venom.png';
 import thorRagnarook from '/src/assets/MoviePosters/ThorRagnarok.png';
-import blackPanter from '/src/assets/MoviePosters/BlackPanter.png';
 
 import jujutsuKaisen0 from '/src/assets/MoviePosters/JUJUTSU KAISEN 0.png';
 import onePiece from '/src/assets/MoviePosters/One Piece Red.png';
@@ -13,40 +13,26 @@ import mobPyscho from '/src/assets/MoviePosters/Mob Pyscho 100.png';
 import blueLock from '/src/assets/MoviePosters/Blue Lock.png';
 import fairyTail from '/src/assets/MoviePosters/Fairy Tail.png';
 
-
 import Navbar from '../components/HomePage/Navbar';
-import Banner from '../components/HomePage/Banner';
-import TrendingSection from '../components/HomePage/TrendingSection';
 import MovieRow from '../components/HomePage/MovieRow';
 import Footer from '../components/Footer';
 import SearchBar from '../components/Search/SearchBar.jsx';
-import SearchResult from '../components/Search/SearchResult.jsx';
+import BrowseResult from '../components/Search/BrowseResult.jsx';
 
-import { useState } from 'react';
-
-function HomePage() {
-    const [result, setResult] = useState(null);
-    const [isSearchActive, setIsSearchActive] = useState(false);
-
+function BrowsePage() {
+    const [result, setResult] = useState(null); // State to store search results
+    const [isSearchActive, setIsSearchActive] = useState(false); // State to track search bar activity
 
     const watchHistoryMovies = [
         { title: "AVENGERS", imgSource: avengers },
         { title: "VENOM", imgSource: venom },
         { title: "THOR: RAGNAROK", imgSource: thorRagnarook },
-        { title: "BLACK PANTER", imgSource: blackPanter },
-        { title: "BLACK PANTER", imgSource: blackPanter },
-        { title: "BLACK PANTER", imgSource: blackPanter },
-        { title: "BLACK PANTER", imgSource: blackPanter },
     ];
 
     const latestReleasesMovies = [
         { title: "JUJUTSU KAISEN 0", imgSource: jujutsuKaisen0 },
         { title: "ONE PIECE: RED", imgSource: onePiece },
         { title: "LUCA", imgSource: luca },
-        { title: "CINDERELLA", imgSource: cinderella },
-        { title: "CINDERELLA", imgSource: cinderella },
-        { title: "CINDERELLA", imgSource: cinderella },
-        { title: "CINDERELLA", imgSource: cinderella },
         { title: "CINDERELLA", imgSource: cinderella },
     ];
 
@@ -55,21 +41,26 @@ function HomePage() {
         { title: "MOB PSYCHO 100", imgSource: mobPyscho },
         { title: "BLUE LOCK", imgSource: blueLock },
         { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
     ];
 
     return (
         <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin relative">
             <Navbar />
-            <div className="absolute top-4 right-4 flex flex-col items-end space-y-2">
-                <SearchBar searchResult={setResult} setIsSearchActive={setIsSearchActive}/>
-                {result && <SearchResult result={result} />}
+            <div className="mx-20 my-8">
+                <SearchBar searchResult={setResult} setIsSearchActive={setIsSearchActive} />
+                {result ? (
+                    result.length > 0 ? (
+                        <div className="mt-4">
+                            <h2 className="text-2xl font-bold mb-4">Search Results</h2>
+                            <BrowseResult movies={result} />
+                        </div>
+                    ) : (
+                        <div className="flex justify-center mt-4">No results found.</div>
+                    )
+                ) : (
+                    <div className="display flex justify-center mt-4">Search for movies or series...</div>
+                )}
             </div>
-            <Banner />
-            <TrendingSection />
             <div className="flex-col justify-center mx-20">
                 <MovieRow
                     title="Based on Your Watch History"
@@ -92,4 +83,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default BrowsePage;
