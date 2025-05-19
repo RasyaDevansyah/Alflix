@@ -17,7 +17,7 @@ import Navbar from '../components/HomePage/Navbar';
 import MovieRow from '../components/HomePage/MovieRow';
 import Footer from '../components/Footer';
 import SearchBar from '../components/Search/SearchBar.jsx';
-import BrowseResult from '../components/Search/BrowseResult.jsx'; // Use BrowseResult to display search results
+import BrowseResult from '../components/Search/BrowseResult.jsx';
 
 function BrowsePage() {
     const [result, setResult] = useState(null); // State to store search results
@@ -62,9 +62,21 @@ function BrowsePage() {
                 )}
             </div>
             <div className="flex-col justify-center mx-20">
-                <MovieRow title="Based on Your Watch History" movies={watchHistoryMovies} />
-                <MovieRow title="Latest Releases" movies={latestReleasesMovies} />
-                <MovieRow title="Anime Series" movies={animeSeriesMovies} />
+                <MovieRow
+                    title="Based on Your Watch History"
+                    movies={watchHistoryMovies}
+                    viewAllLink="/history"
+                />
+                <MovieRow
+                    title="Latest Releases"
+                    movies={latestReleasesMovies}
+                    viewAllLink="/latest"
+                />
+                <MovieRow
+                    title="Anime Series"
+                    movies={animeSeriesMovies}
+                    viewAllLink="/anime"
+                />
             </div>
             <Footer />
         </div>

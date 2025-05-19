@@ -71,9 +71,21 @@ function HomePage() {
             <Banner />
             <TrendingSection />
             <div className="flex-col justify-center mx-20">
-                <MovieRow title="Based on Your Watch History" movies={watchHistoryMovies} />
-                <MovieRow title="Latest Releases" movies={latestReleasesMovies} />
-                <MovieRow title="Anime Series" movies={animeSeriesMovies} />
+                <MovieRow
+                    title="Based on Your Watch History"
+                    movies={watchHistoryMovies}
+                    viewAllLink="/history"
+                />
+                <MovieRow
+                    title="Latest Releases"
+                    movies={latestReleasesMovies}
+                    viewAllLink="/latest"
+                />
+                <MovieRow
+                    title="Anime Series"
+                    movies={animeSeriesMovies}
+                    viewAllLink="/anime"
+                />
             </div>
             <Footer />
         </div>
