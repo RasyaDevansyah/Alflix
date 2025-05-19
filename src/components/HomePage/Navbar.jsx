@@ -22,10 +22,14 @@ function Navbar() {
             {/* Navbar Right */}
             <div className="flex items-center gap-3">
                 <FaBell color="#DEDCFA" className="h-5 w-auto" />
-                <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
-                    <FaUser color="#1E1E2A" className="h-4 w-auto" />
-                </div>
-                <p className="mr-4 text-[#6358D3] font-bold tracking-[0.15em]">USERNAME</p>
+                <Link to="/Profile" className="flex items-center gap-2">
+                    <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
+                        <FaUser color="#1E1E2A" className="h-4 w-auto" />
+                    </div>
+                    <span className="mr-4 text-[#6358D3] font-bold tracking-[0.15em] hover:text-purple-400">
+                        USERNAME
+                    </span>
+                </Link>
             </div>
         </div>
     );
