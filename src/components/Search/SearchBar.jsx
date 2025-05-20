@@ -19,17 +19,17 @@
         const handleChange = (value) => {
             setInput(value)
             const movies = [ // dummy movie
-                {title: "Avengers", imgSource: avengers,id: 1},
-                {title: "Venom", imgSource: venom,id: 2},
-                {title: "Thor: Ragnarok", imgSource: thorRagnarook,id: 3},
-                {title: "Jujutsu Kaisen 0", imgSource: jujutsuKaisen0,id: 4},
-                {title: "One Piece: Red", imgSource: onePiece,id: 5},
-                {title: "Luca", imgSource: luca,id: 6},
-                {title: "Cinderella", imgSource: cinderella,id: 7},
-                {title: "Hunter X Hunter", imgSource: hunterXHunter,id: 8},
-                {title: "Mob Psycho 100", imgSource: mobPyscho,id: 9},
-                {title: "Blue Lock", imgSource: blueLock,id: 10},
-                {title: "Fairy Tail", imgSource: fairyTail,id: 11},
+                {title: "Avengers", imgSource: avengers, id: 1, category: ["Action", "Latest Releases"]},
+                {title: "Venom", imgSource: venom, id: 2, category: ["Action", "Latest Releases"]},
+                {title: "Thor: Ragnarok", imgSource: thorRagnarook, id: 3, category: ["Action", "Latest Releases"]},
+                {title: "JUJUTSU KAISEN 0", imgSource: jujutsuKaisen0, id: 4, category: ["Anime", "Latest Releases"]},
+                {title: "ONE PIECE: RED", imgSource: onePiece, id: 5, category: "Anime"},
+                {title: "LUCA", imgSource: luca, id: 6, category: ["Anime", "Latest Releases"]},
+                {title: "CINDERELLA", imgSource: cinderella, id: 7, category: ["Latest Releases"]},
+                {title: "HUNTER X HUNTER", imgSource: hunterXHunter, id: 8, category: ["Anime"]},
+                {title: "MOB PSYCHO 100", imgSource: mobPyscho, id: 9, category: ["Anime", "Latest Releases"]},
+                {title: "BLUE LOCK", imgSource: blueLock, id: 10, category: ["Anime"]},
+                {title: "FAIRY TAIL", imgSource: fairyTail, id: 11, category: ["Anime"]},
             ];
 
             if(value.trim() === "") {
