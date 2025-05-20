@@ -79,12 +79,12 @@ function HomePage() {
                 <MovieRow
                     title="Latest Releases"
                     movies={latestReleasesMovies}
-                    viewAllLink="/latest"
+                    viewAllLink="/category/Latest Releases"
                 />
                 <MovieRow
                     title="Anime Series"
                     movies={animeSeriesMovies}
-                    viewAllLink="/anime"
+                    viewAllLink="/category/Anime"
                 />
             </div>
             <Footer />
