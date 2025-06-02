@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import SubscriptionPage from "./pages/SubscriptionPage"; 
 import PaymentPage from "./pages/PaymentPage";
 import VideoInfoPage from './pages/VideoInfoPage';
+import VideoPlayBack from './pages/VideoPlayBack';
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import ProfilePage from './pages/ProfilePage';  
 // import { Route, Routes } from 'react-router-dom';
@@ -21,6 +22,7 @@ function App() {
           <Route path="/Subscription" element={<SubscriptionPage />} />
           <Route path="/Payment" element={<PaymentPage />} /> 
           <Route path="/VideoInfoPage" element={<VideoInfoPage />} /> 
+          <Route path="/VideoPlayBack" element={<VideoPlayBack />} />
           <Route path="/payment-success" element={<PaymentSuccessPage />} />
           <Route path="/Profile" element={<ProfilePage />} />
 
