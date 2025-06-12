@@ -12,9 +12,9 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/api/movies', async (req, res) => {
     const movie = req.body;
 
-    if(!movie.name || !movie.releaseYear || !movie.rating || !movie.description || !movie.tags || !movie.actors || !movie.video) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
+    // if(!movie.name || !movie.releaseYear || !movie.rating || !movie.description || !movie.tags || !movie.actors || !movie.video) {
+    //     return res.status(400).json({ message: 'All fields are required' });
+    // }
     const newMovie = new Movie(movie);
 
     try {
@@ -71,8 +71,6 @@ app.put('/api/movies/:id', async (req, res) => {
     }
 }
 );
-
-
 
 app.listen(5000, () => {
     connectDB();
