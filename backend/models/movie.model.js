@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
 
-const productSchema = new mongoose.Schema({
-    name:{
+const movieSchema = new mongoose.Schema({
+    title: {
         type: String,
         required: true,
     },
-    releaseYear: {
-        type: Number,
+    poster: {
+        type: String, // Can store base64 string, but not recommended for large images
+        required: true,
+    },
+    description: {
+        type: String,
         required: true,
     },
     rating: {
@@ -15,57 +19,55 @@ const productSchema = new mongoose.Schema({
         min: 0.0,
         max: 10.0,
     },
-    description: {
-        type: String,
+    video: {
+        type: String, // Store video file path or URL
         required: true,
+    },
+    imgHeader: {
+        type: String, // Can store base64 string, but not recommended for large images
+        required: true,
+    },
+    imgSubheader: {
+        type: String, // Can store base64 string, but not recommended for large images
+        required: true,
+    },
+    year: {
+        type: Number,
+        required: true,
+    },
+    quote: {
+        type: String,
+        required: false,
     },
     tags: [{
-        type: String,
-    }],
-    actors: [{
-        type: String,
-    }],
-    video: {
-        type: String,
+        id: {
+        type: Number,
         required: true,
-    },
-}, { 
-    timestamps: true 
+        },
+        name: {
+            type: String,
+            required: true,
+        }
+    }],
+    cast: [{
+        castPicture: {
+            type: String, // Can store base64 string, but not recommended for large images
+            required: true,
+        },
+        actorName: {
+            type: String,
+            required: true,
+        },
+        roleName: {
+            type: String,
+            required: true,
+        }
+    }]
+}, {
+    timestamps: true
 });
-/*
-Example movie data in JSON:
 
-[
-    {
-        "name": "Inception",
-        "releaseYear": 2010,
-        "rating": 8.8,
-        "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
-        "tags": ["sci-fi", "thriller", "action"],
-        "actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Ellen Page"],
-        "video": "https://example.com/inception.mp4"
-    },
-    {
-        "name": "The Shawshank Redemption",
-        "releaseYear": 1994,
-        "rating": 9.3,
-        "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-        "tags": ["drama", "crime"],
-        "actors": ["Tim Robbins", "Morgan Freeman", "Bob Gunton"],
-        "video": "https://example.com/shawshank.mp4"
-    },
-    {
-        "name": "The Matrix",
-        "releaseYear": 1999,
-        "rating": 8.7,
-        "description": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
-        "tags": ["sci-fi", "action"],
-        "actors": ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss"],
-        "video": "https://example.com/matrix.mp4"
-    }
-]
-*/
-
-const Movie = mongoose.model("Movie", productSchema);
+const Movie = mongoose.model("Movie", movieSchema);
 
 export default Movie;
+
