@@ -1,19 +1,3 @@
-import avengers from '/src/assets/MoviePosters/Avengers.png';
-import venom from '/src/assets/MoviePosters/Venom.png';
-import thorRagnarook from '/src/assets/MoviePosters/ThorRagnarok.png';
-import blackPanter from '/src/assets/MoviePosters/BlackPanter.png';
-
-import jujutsuKaisen0 from '/src/assets/MoviePosters/JUJUTSU KAISEN 0.png';
-import onePiece from '/src/assets/MoviePosters/One Piece Red.png';
-import luca from '/src/assets/MoviePosters/Luca.png';
-import cinderella from '/src/assets/MoviePosters/Cinderella.png';
-
-import hunterXHunter from '/src/assets/MoviePosters/Hunter X Hunter.png';
-import mobPyscho from '/src/assets/MoviePosters/Mob Pyscho 100.png';
-import blueLock from '/src/assets/MoviePosters/Blue Lock.png';
-import fairyTail from '/src/assets/MoviePosters/Fairy Tail.png';
-
-
 import Navbar from '../components/HomePage/Navbar';
 import Banner from '../components/HomePage/Banner';
 import TrendingSection from '../components/HomePage/TrendingSection';
@@ -27,31 +11,39 @@ import { useState, useEffect } from 'react';
 function HomePage() {
     const [result, setResult] = useState(null);
     const [isSearchActive, setIsSearchActive] = useState(false);
-    const [moviesData, setMoviesData] = useState({
-        watchHistory: [],
-        latestReleases: [],
-        animeSeries: []
-    });
+    const [genreMovies, setGenreMovies] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchMovies = async () => {
+        const fetchPopularGenresAndMovies = async () => {
             try {
-                const response = await fetch('/api/movies');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch movies');
+                // First fetch all tags
+                const tagsResponse = await fetch('/api/tags');
+                if (!tagsResponse.ok) {
+                    throw new Error('Failed to fetch tags');
                 }
-                var data = await response.json();
-                data = data.data; 
-
-                // Assuming the API returns all movies and we need to categorize them
-                // You might need to adjust this based on your actual API response structure
-                setMoviesData({
-                    watchHistory: data.slice(0, 7), // First 7 for watch history
-                    latestReleases: data.slice(7, 15), // Next 8 for latest releases
-                    animeSeries: data.slice(15, 23) // Next 8 for anime series
-                });
+                const tagsData = await tagsResponse.json();
+                
+                // Get top 3 most popular genres (based on count)
+                const popularGenres = tagsData.data
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 100);
+                
+                // Fetch movies for each popular genre
+                const genreMoviesData = {};
+                
+                for (const genre of popularGenres) {
+                    const moviesResponse = await fetch(`/api/movies?tagId=${genre._id}`);
+                    if (!moviesResponse.ok) {
+                        console.error(`Failed to fetch movies for genre ${genre.name}`);
+                        continue;
+                    }
+                    const moviesData = await moviesResponse.json();
+                    genreMoviesData[genre.name] = moviesData.data.slice(0, 10); // Take first 10 movies
+                }
+                
+                setGenreMovies(genreMoviesData);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -59,11 +51,8 @@ function HomePage() {
             }
         };
 
-        fetchMovies();
+        fetchPopularGenresAndMovies();
     }, []);
-    // if (loading) {
-    //     return <div className="min-h-screen bg-[#1e1e2a] text-white flex justify-center items-center">Loading...</div>;
-    // }
 
     if (error) {
         return <div className="min-h-screen bg-[#1e1e2a] text-white flex justify-center items-center">Error: {error}</div>;
@@ -72,7 +61,6 @@ function HomePage() {
     const formatMovieData = (movie) => ({
         title: movie.title,
         imgSource: movie.poster,
-        // Add any other required fields from the API response
         year: movie.year,
         rating: movie.rating,
         id: movie._id
@@ -88,21 +76,20 @@ function HomePage() {
             <Banner />
             <TrendingSection />
             <div className="flex-col justify-center mx-20">
-                <MovieRow
-                    title="Based on Your Watch History"
-                    movies={moviesData.watchHistory.map(formatMovieData)}
-                    viewAllLink="/history"
-                />
-                <MovieRow
-                    title="Latest Releases"
-                    movies={moviesData.latestReleases.map(formatMovieData)}
-                    viewAllLink="/category/Latest Releases"
-                />
-                <MovieRow
-                    title="Anime Series"
-                    movies={moviesData.animeSeries.map(formatMovieData)}
-                    viewAllLink="/category/Anime"
-                />
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <p>Loading...</p>
+                    </div>
+                ) : (
+                    Object.entries(genreMovies).map(([genreName, movies]) => (
+                        <MovieRow
+                            key={genreName}
+                            title={genreName}
+                            movies={movies.map(formatMovieData)}
+                            viewAllLink={`/category/${genreName}`}
+                        />
+                    ))
+                )}
             </div>
             <Footer />
         </div>

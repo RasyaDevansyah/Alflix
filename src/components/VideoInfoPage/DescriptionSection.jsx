@@ -8,9 +8,9 @@ export default function DescriptionSection({ description, quote }) {
         <div className="w-px bg-white/80 h-40 self-center"></div>
         <div className="w-1/4 pl-8 flex items-center justify-center">
           <p className="text-3xl italic font-bold leading-[1.6]">
-            {quote.split('\n').map((line, i) => (
-              <span key={i}>{line}<br /></span>
-            ))}
+            ❝{quote.split('\n').map((line, i) => (
+              <span key={i}>{line}</span>
+            ))}❞
           </p>
         </div>
       </div>

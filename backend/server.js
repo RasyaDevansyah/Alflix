@@ -9,66 +9,61 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.post('/api/movies', async (req, res) => {
-//     const movie = req.body;
-
-//     // if(!movie.name || !movie.releaseYear || !movie.rating || !movie.description || !movie.tags || !movie.actors || !movie.video) {
-//     //     return res.status(400).json({ message: 'All fields are required' });
-//     // }
-//     const newMovie = new Movie(movie);
-
-//     try {
-//         await newMovie.save();
-//         res.status(201).json({ success: true, data: newMovie });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error saving movie', error });
-//     }
-// });
-
-// app.delete('/api/movies/:id', async (req, res) => {
-//     const { id } = req.params;
-//     console.log(id);
-//     try {
-//         const deletedMovie = await Movie.findByIdAndDelete(id);
-//         if (!deletedMovie) {
-//             return res.status(404).json({ message: 'Movie not found' });
-//         }
-//         res.status(200).json({ success: true, data: deletedMovie });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error deleting movie', error });
-//     }
-// });
-// app.put('/api/movies/:id', async (req, res) => {
-//     const { id } = req.params;
-//     const movie = req.body;
-
-//     if(!mongoose.Types.ObjectId.isValid(id) ) {
-//         return res.status(400).json({success: false,  message: 'Invalid movie ID' });
-//     }
-
-//     try {
-//         const updatedMovie = await Movie.findByIdAndUpdate(id, movie, { new: true });
-//         console.log(movie);
-//         console.log(updatedMovie);
-//         res.status(200).json({ success: true, data: updatedMovie });
-
-//     } catch (error) {
-//         console.error(error.message);
-//         res.status(500).json({ message: 'Error updating movie', error });
-//     }
-// }
-// );
-
+app.get('/api/tags', async (req, res) => {
+    try {
+        // Get all unique tag IDs and names
+        const tags = await Movie.aggregate([
+            { $unwind: "$tags" },
+            { 
+                $group: {
+                    _id: "$tags.id",
+                    name: { $first: "$tags.name" },
+                    count: { $sum: 1 } // counts how many movies have this tag
+                }
+            },
+            { $sort: { count: -1 } } // sort by most used tags first
+        ]);
+        
+        res.status(200).json({ 
+            success: true, 
+            data: tags 
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ 
+            message: 'Error fetching tags', 
+            error 
+        });
+    }
+});
 
 app.get('/api/movies', async (req, res) => {
     try {
-        const movies = await Movie.find();
+        // Extract query parameters
+        const { tag, tagId } = req.query;
+        
+        // Build filter object
+        const filter = {};
+        
+        // Filter by tag name (case insensitive)
+        if (tag) {
+            filter['tags.name'] = { $regex: new RegExp(tag, 'i') };
+        }
+        
+        // Filter by tag ID
+        if (tagId) {
+            filter['tags.id'] = parseInt(tagId);
+        }
+        
+        const movies = await Movie.find(filter);
         res.status(200).json({ success: true, data: movies });
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: 'Error fetching movies', error });
     }
 });
+
+
 app.get('/api/movies/:id', async (req, res) => {
     const { id } = req.params;
 
