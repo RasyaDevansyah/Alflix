@@ -2,21 +2,26 @@ import React from 'react';
 
 function MovieCardLandscape({ imageSrc, movieTitle }) {
     return (
-        <div className="flex flex-col relative flex-shrink-0">
-            {/* Picture card */}
-            <div className="w-80 h-48 rounded-lg overflow-hidden">
+        <div className="flex flex-col relative flex-shrink-0 w-72 sm:w-80 group cursor-pointer transition-transform hover:scale-105">
+            
+            {/* Image Card */}
+            <div className="w-full h-40 sm:h-48 rounded-lg overflow-hidden shadow-[0_0_10px_1px_rgba(255,255,255,0.15)]">
                 <img 
                     src={imageSrc} 
-                    alt="Movie Image" 
+                    alt={movieTitle} 
                     className="w-full h-full object-cover"
                 />
             </div>
 
-            {/* Cast Name */}
-            <p className="mt-1 text-xl leading-[1.6] tracking-[0.15em] font-bold">{movieTitle}</p>
+            {/* Movie Title */}
+            <p className="mt-2 text-lg sm:text-xl leading-[1.6] tracking-[0.15em] font-bold line-clamp-2">
+                {movieTitle}
+            </p>
 
-            {/* Character Name */}
-            <p className="text-sm text-[#B8B1FF] tracking-[0.15em]">{"watch >"}</p>
+            {/* Watch Label */}
+            <p className="text-sm sm:text-base text-[#B8B1FF] tracking-[0.15em] group-hover:underline">
+                watch &gt;
+            </p>
         </div>
     );
 }
