@@ -43,7 +43,6 @@ const SubscriptionPlans = () => {
       <h2 className="text-3xl font-semibold mt-10">Choose Your Plan</h2>
       <p className="text-gray-400 mt-2">Switch or cancel anytime.</p>
 
-      
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl">
         {plans.map((plan, index) => (
           <div
