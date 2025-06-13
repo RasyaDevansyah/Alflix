@@ -18,17 +18,15 @@ function HomePage() {
     useEffect(() => {
         const fetchPopularGenresAndMovies = async () => {
             try {
-                // First fetch all tags
                 const tagsResponse = await fetch('/api/tags');
                 if (!tagsResponse.ok) {
                     throw new Error('Failed to fetch tags');
                 }
                 const tagsData = await tagsResponse.json();
                 
-                // Get top 3 most popular genres (based on count)
                 const popularGenres = tagsData.data
                     .sort((a, b) => b.count - a.count)
-                    .slice(0, 100);
+                    .slice(0, 8);
                 
                 // Fetch movies for each popular genre
                 const genreMoviesData = {};
