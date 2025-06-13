@@ -42,7 +42,6 @@ const SubscriptionPlans = () => {
       <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-6">
 
 
-      
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl">
         {plans.map((plan, index) => (
           <div
