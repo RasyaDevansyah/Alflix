@@ -8,4 +8,12 @@ export default defineConfig({
     tailwindcss(),
   ],
   base: "/Alflix/",
+  server:
+  {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+      },
+    },
+  },
 })

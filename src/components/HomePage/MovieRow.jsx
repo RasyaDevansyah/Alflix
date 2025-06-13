@@ -58,7 +58,8 @@ function MovieRow({ title, movies, viewAllLink }) {
                             key={index}
                             movieTitle={movie.title}
                             imgSource={movie.imgSource}
-                            number={index + 1} // Pass the index as a number prop
+                            id = {movie.id}
+                            // number={index + 1} // Pass the index as a number prop
                         />
                     ))}
                 </div>

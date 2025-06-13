@@ -22,44 +22,61 @@ import Footer from '../components/Footer';
 import SearchBar from '../components/Search/SearchBar.jsx';
 import SearchResult from '../components/Search/SearchResult.jsx';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function HomePage() {
     const [result, setResult] = useState(null);
     const [isSearchActive, setIsSearchActive] = useState(false);
+    const [moviesData, setMoviesData] = useState({
+        watchHistory: [],
+        latestReleases: [],
+        animeSeries: []
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const response = await fetch('/api/movies');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch movies');
+                }
+                var data = await response.json();
+                data = data.data; 
 
-    const watchHistoryMovies = [
-        { title: "AVENGERS", imgSource: avengers },
-        { title: "VENOM", imgSource: venom },
-        { title: "THOR: RAGNAROK", imgSource: thorRagnarook },
-        { title: "BLACK PANTER", imgSource: blackPanter },
-        { title: "BLACK PANTER", imgSource: blackPanter },
-        { title: "BLACK PANTER", imgSource: blackPanter },
-        { title: "BLACK PANTER", imgSource: blackPanter },
-    ];
+                // Assuming the API returns all movies and we need to categorize them
+                // You might need to adjust this based on your actual API response structure
+                setMoviesData({
+                    watchHistory: data.slice(0, 7), // First 7 for watch history
+                    latestReleases: data.slice(7, 15), // Next 8 for latest releases
+                    animeSeries: data.slice(15, 23) // Next 8 for anime series
+                });
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const latestReleasesMovies = [
-        { title: "JUJUTSU KAISEN 0", imgSource: jujutsuKaisen0 },
-        { title: "ONE PIECE: RED", imgSource: onePiece },
-        { title: "LUCA", imgSource: luca },
-        { title: "CINDERELLA", imgSource: cinderella },
-        { title: "CINDERELLA", imgSource: cinderella },
-        { title: "CINDERELLA", imgSource: cinderella },
-        { title: "CINDERELLA", imgSource: cinderella },
-        { title: "CINDERELLA", imgSource: cinderella },
-    ];
+        fetchMovies();
+    }, []);
+    // if (loading) {
+    //     return <div className="min-h-screen bg-[#1e1e2a] text-white flex justify-center items-center">Loading...</div>;
+    // }
 
-    const animeSeriesMovies = [
-        { title: "HUNTER X HUNTER", imgSource: hunterXHunter },
-        { title: "MOB PSYCHO 100", imgSource: mobPyscho },
-        { title: "BLUE LOCK", imgSource: blueLock },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-        { title: "FAIRY TAIL", imgSource: fairyTail },
-    ];
+    if (error) {
+        return <div className="min-h-screen bg-[#1e1e2a] text-white flex justify-center items-center">Error: {error}</div>;
+    }
+
+    const formatMovieData = (movie) => ({
+        title: movie.title,
+        imgSource: movie.poster,
+        // Add any other required fields from the API response
+        year: movie.year,
+        rating: movie.rating,
+        id: movie._id
+    });
 
     return (
         <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin relative">
@@ -73,17 +90,17 @@ function HomePage() {
             <div className="flex-col justify-center mx-20">
                 <MovieRow
                     title="Based on Your Watch History"
-                    movies={watchHistoryMovies}
+                    movies={moviesData.watchHistory.map(formatMovieData)}
                     viewAllLink="/history"
                 />
                 <MovieRow
                     title="Latest Releases"
-                    movies={latestReleasesMovies}
+                    movies={moviesData.latestReleases.map(formatMovieData)}
                     viewAllLink="/category/Latest Releases"
                 />
                 <MovieRow
                     title="Anime Series"
-                    movies={animeSeriesMovies}
+                    movies={moviesData.animeSeries.map(formatMovieData)}
                     viewAllLink="/category/Anime"
                 />
             </div>

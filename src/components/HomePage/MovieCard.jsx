@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-const MovieCard = ({ movieTitle, imgSource, number }) => {
+const MovieCard = ({ movieTitle, imgSource, number, id }) => {
     return (
-        <div className="w-60 h-106 relative flex-shrink-0"> {/* Adjusted width and height */}
+        <div className="w-60 h-106 relative flex-shrink-0">
             {/* Number Badge */}
             {number && (
                 <div className="absolute top-0 left-2 z-10 text-white text-2xl font-bold">
@@ -23,9 +23,14 @@ const MovieCard = ({ movieTitle, imgSource, number }) => {
 
                 {/* Movie Title and Watch Link */}
                 <div className="w-full mt-4 text-left tracking-[0.15em] pl-2">
-                    <p className="text-white font-bold">{movieTitle}</p>
+                    <p
+                        className="text-white font-bold overflow-hidden text-ellipsis whitespace-nowrap"
+                        title={movieTitle}
+                    >
+                        {movieTitle}
+                    </p>
 
-                    <Link to="/VideoInfoPage" className="text-violet-500">
+                    <Link to={`/VideoInfoPage/${id}`} className="text-violet-500">
                         {"Watch >"}
                     </Link>
                 </div>
