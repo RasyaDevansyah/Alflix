@@ -14,8 +14,30 @@ function HomePage() {
     const [genreMovies, setGenreMovies] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [allMovies, setAllMovies] = useState([]);
+
 
     useEffect(() => {
+
+        const fetchAllMovies = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('/api/movies');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setAllMovies(data.data);
+                console.log('All movies fetched:', data.data); // Log the data directly
+            } catch (err) {
+                setError(err.message);
+                console.error('Error fetching all movies:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchAllMovies();
+
         const fetchPopularGenresAndMovies = async () => {
             try {
                 const tagsResponse = await fetch('/api/tags');
@@ -23,14 +45,12 @@ function HomePage() {
                     throw new Error('Failed to fetch tags');
                 }
                 const tagsData = await tagsResponse.json();
-                
                 const popularGenres = tagsData.data
                     .sort((a, b) => b.count - a.count)
                     .slice(0, 8);
-                
+
                 // Fetch movies for each popular genre
                 const genreMoviesData = {};
-                
                 for (const genre of popularGenres) {
                     const moviesResponse = await fetch(`/api/movies?tagId=${genre._id}`);
                     if (!moviesResponse.ok) {
@@ -40,7 +60,7 @@ function HomePage() {
                     const moviesData = await moviesResponse.json();
                     genreMoviesData[genre.name] = moviesData.data.slice(0, 10); // Take first 10 movies
                 }
-                
+
                 setGenreMovies(genreMoviesData);
             } catch (err) {
                 setError(err.message);
@@ -68,9 +88,10 @@ function HomePage() {
         <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin relative">
             <Navbar />
             <div className="absolute top-4 right-4 flex flex-col items-end space-y-2">
-                <SearchBar searchResult={setResult} setIsSearchActive={setIsSearchActive}/>
+                <SearchBar moviesData={allMovies} searchResult={setResult} setIsSearchActive={setIsSearchActive} />
                 {result && <SearchResult result={result} />}
             </div>
+
             <Banner />
             <TrendingSection />
             <div className="flex-col justify-center mx-20">
