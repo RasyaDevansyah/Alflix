@@ -18,6 +18,8 @@ import Aladin from '/src/assets/MoviePostersLandscape/Aladin.jpeg'
 import LionKing from '/src/assets/MoviePostersLandscape/Lion King.png'
 import SnowWhite from '/src/assets/MoviePostersLandscape/SnowWhite.png'
 
+import { useParams } from "react-router-dom";
+
 function VideoInfoPage() {
   const movieData = {
     title: "BEAUTY AND THE BEAST",
@@ -42,7 +44,8 @@ function VideoInfoPage() {
     { image: Aladin, title: "ALADIN" },
     { image: LionKing, title: "LION KING" },
   ];
-
+  const { id } = useParams();
+  
 
   return (
     <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">

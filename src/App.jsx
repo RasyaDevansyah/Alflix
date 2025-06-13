@@ -24,7 +24,7 @@ function App() {
         <Route path="/Home" element={<HomePage />} />
         <Route path="/Subscription" element={<SubscriptionPage />} />
         <Route path="/Payment" element={<PaymentPage />} />
-        <Route path="/VideoInfoPage" element={<VideoInfoPage />} />
+        <Route path="/VideoInfoPage/:id" element={<VideoInfoPage />} />
         <Route path="/BrowsePage" element={<BrowsePage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/category/:category" element={<CategoryPage />} />
