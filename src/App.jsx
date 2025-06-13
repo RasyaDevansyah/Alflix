@@ -8,7 +8,9 @@ import HistoryPage from './pages/ViewAllPages/HistoryPage';
 import CategoryPage from './pages/ViewAllPages/CategoryPage';
 import BrowsePage from './pages/BrowsePage';
 import WelcomePage from './pages/WelcomePage';
-
+import VideoPlayBack from './pages/VideoPlayBack';
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import ProfilePage from './pages/ProfilePage';  
 // import { Route, Routes } from 'react-router-dom';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -28,6 +30,10 @@ function App() {
         <Route path="/BrowsePage" element={<BrowsePage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/category/:category" element={<CategoryPage />} />
+        <Route path="/VideoPlayBack" element={<VideoPlayBack />} />
+        <Route path="/payment-success" element={<PaymentSuccessPage />} />
+        <Route path="/Profile" element={<ProfilePage />} />
+
       </Routes>
     </main>
   )
