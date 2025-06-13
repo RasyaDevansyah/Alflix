@@ -9,6 +9,65 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/api/movies/trending', async (req, res) => {
+    try {
+        // Get current year
+        const currentYear = new Date().getFullYear();
+        
+        // Get best rated movies from recent years (last 3 years)
+        const bestRatedRecent = await Movie.aggregate([
+            {
+                $match: {
+                    year: { $gte: currentYear - 3 } // Only movies from last 3 years
+                }
+            },
+            {
+                $sort: { rating: -1, year: -1 }
+            },
+            {
+                $limit: 10
+            }
+        ]);
+        
+        // Get newest movies (current year)
+        const newestMovies = await Movie.aggregate([
+            {
+                $match: {
+                    year: currentYear
+                }
+            },
+            {
+                $sort: { rating: -1 }
+            },
+            {
+                $limit: 10
+            }
+        ]);
+        
+        // Combine and deduplicate
+        const combined = [...bestRatedRecent, ...newestMovies];
+        const uniqueMovies = combined.reduce((acc, movie) => {
+            if (!acc.some(m => m._id.equals(movie._id))) {
+                acc.push(movie);
+            }
+            return acc;
+        }, []);
+        
+        res.status(200).json({ 
+            success: true, 
+            data: uniqueMovies 
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ 
+            message: 'Error fetching trending movies', 
+            error 
+        });
+    }
+});
+
+
+
 app.get('/api/tags', async (req, res) => {
     try {
         // Get all unique tag IDs and names
