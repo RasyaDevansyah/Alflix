@@ -39,18 +39,11 @@ app.get('/api/tags', async (req, res) => {
 
 app.get('/api/movies', async (req, res) => {
     try {
-        // Extract query parameters
         const { tag, tagId } = req.query;
-        
-        // Build filter object
         const filter = {};
-        
-        // Filter by tag name (case insensitive)
         if (tag) {
             filter['tags.name'] = { $regex: new RegExp(tag, 'i') };
         }
-        
-        // Filter by tag ID
         if (tagId) {
             filter['tags.id'] = parseInt(tagId);
         }
