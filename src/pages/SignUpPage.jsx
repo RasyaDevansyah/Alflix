@@ -43,9 +43,9 @@ function SignUpPage() {
             if (!response.ok) throw new Error(data.message || 'Registration failed');
 
             // Automatically log in after registration
-            const loginResult = await login(email, password);
+            const loginResult = await login(email, password, false);
             if (loginResult.success) {
-                navigate("/home");
+                navigate("/");
             } else {
                 setError('Registration successful! Please log in.');
                 navigate("/");

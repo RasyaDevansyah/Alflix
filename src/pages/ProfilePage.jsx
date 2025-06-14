@@ -2,6 +2,7 @@ import Navbar from "../components/HomePage/Navbar";
 import Footer from "../components/Footer";
 import WatchHoursChart from "../components/WatchHoursChart";
 import MovieAnalyticsChart from "../components/MovieAnalyticsChart";
+import { FaSignOutAlt } from "react-icons/fa";
 
 import profile from '/src/assets/profile-pic.png';
 import profilebanner from '/src/assets/profile-banner.png';
@@ -15,8 +16,29 @@ import neZha from '/src/assets/MoviePosters/NeZha.png';
 
 import phoneIcon from '/src/assets/Phone.png';
 import computerIcon from '/src/assets/Computer.png';
+import { useAuth } from "../components/Context/AuthContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
+    const navigate = useNavigate();
+    const { user, logout } = useAuth()
+
+    useEffect(() => {
+      if (user === null) {
+        navigate("/Home", { replace: true });
+      }
+    }, [user, navigate]);
+
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
+
     const recentWatches = [
         { title: "My Hero Academia", season: "Season 4", episode: "Episode 3", image: BokuNohero },
         { title: "Jujutsu Kaisen", season: "Season 1", episode: "Episode 10", image: jujutsuKaisen },
@@ -34,17 +56,25 @@ function ProfilePage() {
             <Navbar />
 
             <div className="flex-1 px-8 py-12">
-                
                 <div
                     className="relative bg-cover bg-center h-[200px] rounded-xl overflow-hidden mb-16"
                     style={{ backgroundImage: `url(${profilebanner})` }}
                 >
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center px-10">
-                        <img src={profile} alt="Profile" className="w-24 h-24 rounded-full border-4 border-white" />
-                        <div className="ml-6">
-                            <p className="text-gray-300 text-lg">Profile of</p>
-                            <h2 className="text-3xl font-bold">@christiawan90</h2>
-                            <p className="text-sm mt-1">12 watched · 5 watching · 2 subscriptions</p>
+                        <div className="flex items-center w-full">
+                            <img src={profile} alt="Profile" className="w-24 h-24 rounded-full border-4 border-white" />
+                            <div className="ml-6 flex-1">
+                                <p className="text-gray-300 text-lg">Profile of</p>
+                                <h2 className="text-3xl font-bold">{user?.username || 'username'}</h2>
+                                <p className="text-sm mt-1">12 watched · 5 watching · 2 subscriptions</p>
+                            </div>
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center gap-2 bg-[#6358D3] hover:bg-[#8883bb] text-white px-4 py-2 rounded-lg transition-colors"
+                            >
+                                <FaSignOutAlt />
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </div>

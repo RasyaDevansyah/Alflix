@@ -21,9 +21,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // if true: only transmit cookie over https
-        httpOnly: true, // prevents client-side JS from reading the cookie
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      secure: process.env.NODE_ENV === 'production', // if true: only transmit cookie over https
+      httpOnly: true, // prevents client-side JS from reading the cookie
     }
 }));
 
@@ -184,7 +183,7 @@ app.post('/api/users/register', async (req, res) => {
 });
 
 app.post('/api/users/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     // Basic validation
     if (!email || !password) {
@@ -215,7 +214,6 @@ app.post('/api/users/login', async (req, res) => {
         }
 
         // In production, you would compare hashed passwords here
-        // For example: const isMatch = await bcrypt.compare(password, user.password);
         if (password !== user.password) {
             return res.status(401).json({
                 success: false,
@@ -223,6 +221,13 @@ app.post('/api/users/login', async (req, res) => {
             });
         }
 
+
+        if (rememberMe) {
+            req.session.cookie.maxAge = 1 * 24 * 60 * 60 * 1000; // 1 day
+        } else {
+            req.session.cookie.maxAge  =  60 * 1000; // 1 minute
+        }
+        
         req.session.user = {
             id: user._id,
             username: user.username,

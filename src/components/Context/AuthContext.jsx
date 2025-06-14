@@ -27,19 +27,25 @@ export const AuthProvider = ({ children }) => {
         checkAuth();
     }, []);
 
-    const login = async (email, password) => {
-        const response = await fetch('/api/users/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-            credentials: 'include'
-        });
-        const data = await response.json();
-        if (data.success) {
-            setUser(data.data.user);
+    const login = async (email, password, rememberMe) => {
+        try {
+            const response = await fetch('/api/users/login', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, rememberMe })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                setUser(data.data.user);
+            }
+            return data;
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, message: 'Login failed' };
         }
-        return data;
-    };
+    }
 
     const logout = async () => {
         await fetch('/api/users/logout', {

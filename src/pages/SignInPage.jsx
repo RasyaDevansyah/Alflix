@@ -18,20 +18,21 @@ function SignInPage() {
     const { login } = useAuth();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false); // New state for checkbox
 
     const SignIn = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
-        
+
         const formData = new FormData(e.target);
         const email = formData.get("email");
         const password = formData.get("password");
-        
+
         try {
-            const result = await login(email, password);
+            const result = await login(email, password, rememberMe); 
             if (result.success) {
-                navigate("/home");
+                navigate("/");
             } else {
                 setError(result.message || 'Login failed');
             }
@@ -46,7 +47,7 @@ function SignInPage() {
         <div className="min-h-screen text-white flex">
             {/* Left Side */}
             <div className="w-1/2 bg-[#1e1e2a] flex justify-center items-center">
-                <AlflixLogo type="1" className="w-1/2 h-auto"/>
+                <AlflixLogo type="1" className="w-1/2 h-auto" />
             </div>
 
             {/* Right Side */}
@@ -74,20 +75,25 @@ function SignInPage() {
                     />
 
                     <div className="flex items-center mb-4 ml-9">
-                        <input type="checkbox" className="mr-2" />
+                        <input
+                            type="checkbox"
+                            className="mr-2"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                        />
                         <p className="font-light italic">Remember Me</p>
                     </div>
 
                     <SubmitButton text={isLoading ? "SIGNING IN..." : "SIGN IN"} disabled={isLoading} />
                 </form>
-                
+
                 {error && (
                     <p className="text-red-500 text-sm text-center my-2">{error}</p>
                 )}
 
                 <div className="text-center">
                     <p>Don't have an account? <Link to="/SignUp" className="text-[#8883bb]">Register</Link></p>
-                    
+
                     <div className="flex items-center justify-center">
                         <hr className="w-3/10" />
                         <p className="m-5">OR</p>

@@ -2,9 +2,23 @@ import AlflixLogo from "../AlflixLogo";
 import { FaBell, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Navbar() {
+    const [isUserInSession, setUserInSession] = useState(false);
+
     const { user } = useAuth();
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!user) {
+            setUserInSession(false);
+        }
+        else {
+            setUserInSession(true);
+        }
+    }, [user, navigate]);
 
     return (
         <div className="flex h-14 justify-between">
@@ -12,7 +26,7 @@ function Navbar() {
             <div className="flex items-center">
                 <AlflixLogo type='2' className="w-1/5 h-auto mr-4 ml-3" />
                 <div className="h-9 w-px bg-white mx-4"></div>
-                <Link to="/Home" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
+                <Link to="/" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
                     HOME
                 </Link>
                 <Link to="/BrowsePage" className="mx-4 text-xl font-bold tracking-[0.15em] hover:text-purple-400">
@@ -25,7 +39,7 @@ function Navbar() {
 
             {/* Navbar Right */}
             <div className="flex items-center gap-3">
-                {user ? (
+                {isUserInSession ? (
                     <>
                         <FaBell color="#DEDCFA" className="h-5 w-auto" />
                         <Link to="/Profile" className="flex items-center gap-2">
@@ -38,8 +52,8 @@ function Navbar() {
                         </Link>
                     </>
                 ) : (
-                    <Link 
-                        to="/Home" 
+                    <Link
+                        to="/Home"
                         className="mr-4 px-4 py-2 bg-[#6358D3] text-white font-bold rounded-lg hover:bg-[#8883bb] transition-colors"
                     >
                         LOGIN
