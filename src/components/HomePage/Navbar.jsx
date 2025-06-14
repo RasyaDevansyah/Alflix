@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -53,16 +52,24 @@ function Navbar() {
 
                 {/* Desktop View (Profile) */}
                 <div className="hidden lg:flex items-center gap-3">
-                    <FaBell color="#DEDCFA" className="h-5 w-auto" />
-                    <Link to="/Profile" className="flex items-center gap-2">
-                        <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
-                            <FaUser color="#1E1E2A" className="h-4 w-auto" />
-                        </div>
+                    {isUserInSession ? (
+                        <>
+                            <FaBell color="#DEDCFA" className="h-5 w-auto" />
+                            <Link to="/Profile" className="flex items-center gap-2">
+                                <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
+                                    <FaUser color="#1E1E2A" className="h-4 w-auto" />
+                                </div>
 
-                        <span className="text-lg text-[#6358D3] font-bold tracking-widest hover:text-purple-400">
-                            USERNAME
-                        </span>
-                    </Link>
+                                <span className="text-lg text-[#6358D3] font-bold tracking-widest hover:text-purple-400">
+                                    {user.username.toUpperCase()}
+                                </span>
+                            </Link>
+                        </>
+                    ) : (
+                        <Link to="/SignIn" className="text-lg text-white font-bold tracking-widest hover:text-purple-400">
+                            LOGIN
+                        </Link>
+                    )}
                 </div>
 
                 {/* Mobile View - Burger Icon */}
@@ -110,17 +117,27 @@ function Navbar() {
 
                             <hr className="my-3 border-gray-600" />
 
-                            <div className="flex items-center gap-3">
-                                <FaBell color="#DEDCFA" className="h-5 w-auto" />
-                                <Link to="/Profile" onClick={toggleMenu} className="flex items-center gap-2">
-                                    <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
-                                        <FaUser color="#1E1E2A" className="h-4 w-auto" />
-                                    </div>
-                                    <span className="text-sm text-[#6358D3] font-semibold tracking-wide hover:text-purple-400">
-                                        USERNAME
-                                    </span>
+                            {isUserInSession ? (
+                                <div className="flex items-center gap-3">
+                                    <FaBell color="#DEDCFA" className="h-5 w-auto" />
+                                    <Link to="/Profile" onClick={toggleMenu} className="flex items-center gap-2">
+                                        <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
+                                            <FaUser color="#1E1E2A" className="h-4 w-auto" />
+                                        </div>
+                                        <span className="text-sm text-[#6358D3] font-semibold tracking-wide hover:text-purple-400">
+                                            {user.username.toUpperCase()}
+                                        </span>
+                                    </Link>
+                                </div>
+                            ) : (
+                                <Link
+                                    to="/SignIn"
+                                    onClick={toggleMenu}
+                                    className="text-sm text-white font-semibold tracking-wide hover:text-purple-400"
+                                >
+                                    LOGIN
                                 </Link>
-                            </div>
+                            )}
                         </nav>
                     </div>
                 </>
