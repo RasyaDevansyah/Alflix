@@ -16,9 +16,7 @@ function HomePage() {
     const [error, setError] = useState(null);
     const [allMovies, setAllMovies] = useState([]);
 
-
     useEffect(() => {
-
         const fetchAllMovies = async () => {
             try {
                 setLoading(true);
@@ -28,15 +26,12 @@ function HomePage() {
                 }
                 const data = await response.json();
                 setAllMovies(data.data);
-                console.log('All movies fetched:', data.data); // Log the data directly
             } catch (err) {
                 setError(err.message);
-                console.error('Error fetching all movies:', err);
             } finally {
                 setLoading(false);
             }
         };
-        fetchAllMovies();
 
         const fetchPopularGenresAndMovies = async () => {
             try {
@@ -49,16 +44,14 @@ function HomePage() {
                     .sort((a, b) => b.count - a.count)
                     .slice(0, 8);
 
-                // Fetch movies for each popular genre
                 const genreMoviesData = {};
                 for (const genre of popularGenres) {
                     const moviesResponse = await fetch(`/api/movies?tagId=${genre._id}`);
                     if (!moviesResponse.ok) {
-                        console.error(`Failed to fetch movies for genre ${genre.name}`);
                         continue;
                     }
                     const moviesData = await moviesResponse.json();
-                    genreMoviesData[genre.name] = moviesData.data.slice(0, 10); // Take first 10 movies
+                    genreMoviesData[genre.name] = moviesData.data.slice(0, 10);
                 }
 
                 setGenreMovies(genreMoviesData);
@@ -69,11 +62,16 @@ function HomePage() {
             }
         };
 
+        fetchAllMovies();
         fetchPopularGenresAndMovies();
     }, []);
 
     if (error) {
-        return <div className="min-h-screen bg-[#1e1e2a] text-white flex justify-center items-center">Error: {error}</div>;
+        return (
+            <div className="min-h-screen bg-[#1e1e2a] text-white flex justify-center items-center">
+                Error: {error}
+            </div>
+        );
     }
 
     const formatMovieData = (movie) => ({
@@ -85,16 +83,21 @@ function HomePage() {
     });
 
     return (
-        <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin relative">
+        <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">
             <Navbar />
-            <div className="absolute top-4 right-4 flex flex-col items-end space-y-2">
-                <SearchBar moviesData={allMovies} searchResult={setResult} setIsSearchActive={setIsSearchActive} />
+            <Banner />
+            <div className="px-4 py-4 md:px-8 md:py-6 flex flex-col items-center md:items-end">
+                <SearchBar
+                    moviesData={allMovies}
+                    searchResult={setResult}
+                    setIsSearchActive={setIsSearchActive}
+                />
                 {result && <SearchResult result={result} />}
             </div>
-
-            <Banner />
+           
             <TrendingSection />
-            <div className="flex-col justify-center mx-20">
+
+            <div className="flex flex-col justify-center px-4 md:px-20">
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
                         <p>Loading...</p>
@@ -110,6 +113,7 @@ function HomePage() {
                     ))
                 )}
             </div>
+
             <Footer />
         </div>
     );
