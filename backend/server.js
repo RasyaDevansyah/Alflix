@@ -31,7 +31,7 @@ app.post('/api/subscription', async (req, res) => {
 });
 
 app.post('/api/users/register', async (req, res) => {
-    const { username, password, email } = req.body;
+    const { username, password, confirmPassword, email } = req.body;
 
     // Basic validation
     if (!username || !password || !email) {
@@ -40,6 +40,14 @@ app.post('/api/users/register', async (req, res) => {
             message: 'Username, password, and email are required' 
         });
     }
+
+    if (password !== confirmPassword) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Passwords do not match' 
+        });
+    }
+
     // Username validation: 3-20 characters, alphanumeric and underscores allowed
     const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
     if (!usernameRegex.test(username)) {
@@ -137,6 +145,69 @@ app.post('/api/users/register', async (req, res) => {
         });
     }
 });
+
+app.post('/api/users/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    // Basic validation
+    if (!email || !password) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Email and password are required' 
+        });
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || email !== email.toLowerCase()) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid email format'
+        });
+    }
+
+    try {
+        // Find user by email
+        const user = await User.findOne({ email });
+        
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Invalid credentials' 
+            });
+        }
+
+        // In production, you would compare hashed passwords here
+        // For example: const isMatch = await bcrypt.compare(password, user.password);
+        if (password !== user.password) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Invalid credentials' 
+            });
+        }
+
+        // Return user data without sensitive information
+        res.status(200).json({ 
+            success: true, 
+            data: {
+                user: {
+                    id: user._id,
+                    username: user.username,
+                    email: user.email,
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error.message);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error during login', 
+            error: error.message 
+        });
+    }
+});
+
+
 
 app.put('/api/users/:userId/subscription', async (req, res) => {
     const { userId } = req.params;
