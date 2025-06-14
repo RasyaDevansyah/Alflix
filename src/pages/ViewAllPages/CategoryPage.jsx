@@ -43,7 +43,7 @@ function CategoryPage() {
 
     const handleSearch = (filteredMovies) => {
         if (!filteredMovies || filteredMovies.length === 0) {
-            setSearchResult([]);
+            setSearchResult(movies);
         } else {
             setSearchResult(filteredMovies);
         }

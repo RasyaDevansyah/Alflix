@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import InputField from "../components/SignInAndSignOut/InputField";
 import SubmitButton from "../components/SignInAndSignOut/SubmitButton";
 import AlflixLogo from "../components/AlflixLogo";
 import { Link, useNavigate } from "react-router-dom";
-
 import GoogleLogo from '/src/assets/Google Logo.png';
 import FacebookLogo from '/src/assets/FacebookLogo.png';
 import MicrosoftLogo from '/src/assets/MicrosoftLogo.webp';
@@ -19,7 +18,16 @@ function SignInPage() {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [rememberMe, setRememberMe] = useState(false); // New state for checkbox
-
+    const { user } = useAuth(); 
+    
+   useEffect(() => {
+      if (user) {
+        navigate("/", { replace: true });
+    }
+    }, [user, navigate]);
+    
+    
+    
     const SignIn = async (e) => {
         e.preventDefault();
         setIsLoading(true);
