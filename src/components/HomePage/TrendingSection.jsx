@@ -35,19 +35,36 @@ function TrendingSection() {
 
     return (
         <div className="flex-col justify-center mb-10">
-            <h1 className="text-4xl font-bold ml-20 my-8 tracking-[0.15em]">TRENDING NOW</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold ml-4 sm:ml-10 md:ml-20 my-6 sm:my-8 tracking-wider text-white">
+                TRENDING NOW
+            </h1>
 
-            {/* Trending Row */}
             <div className="flex justify-center">
-                <div className="flex bg-[#302E3B] w-11/12 rounded-lg overflow-hidden">
-                    <div className="flex justify-evenly w-full mt-14 mb-8">
+                <div className="bg-[#302E3B] w-11/12 rounded-lg overflow-hidden p-4 sm:p-6 md:p-8">
+                    
+                    {/* Mobile & Tablet: Horizontal Scroll */}
+                    <div className="flex lg:hidden gap-6 overflow-x-auto scrollbar-hide scroll-smooth">
                         {trendingMovies.slice(0, 4).map((movie, index) => (
-                            <MovieCard 
+                            <div key={movie._id} className="min-w-[220px] flex-shrink-0">
+                                <MovieCard
+                                    movieTitle={movie.title.toUpperCase()}
+                                    imgSource={movie.poster}
+                                    number={(index + 1).toString()}
+                                    id={movie._id}
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop only: Grid */}
+                    <div className="hidden lg:grid grid-cols-4 gap-6">
+                        {trendingMovies.slice(0, 4).map((movie, index) => (
+                            <MovieCard
                                 key={movie._id}
-                                movieTitle={movie.title.toUpperCase()} 
-                                imgSource={movie.poster} 
+                                movieTitle={movie.title.toUpperCase()}
+                                imgSource={movie.poster}
                                 number={(index + 1).toString()}
-                                id = {movie._id}
+                                id={movie._id}
                             />
                         ))}
                     </div>

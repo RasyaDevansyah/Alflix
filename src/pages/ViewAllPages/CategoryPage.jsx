@@ -21,7 +21,6 @@ function CategoryPage() {
             }
             try {
                 setLoading(true);
-                // Convert category from URL to lowercase for the API call
                 const formattedCategory = category.toLowerCase();
                 const response = await fetch(`/api/movies?tag=${formattedCategory}`);
 
@@ -44,7 +43,7 @@ function CategoryPage() {
 
     const handleSearch = (filteredMovies) => {
         if (!filteredMovies || filteredMovies.length === 0) {
-            setSearchResult(null);
+            setSearchResult([]);
         } else {
             setSearchResult(filteredMovies);
         }
@@ -52,28 +51,33 @@ function CategoryPage() {
 
     const displayMovies = searchResult !== null ? searchResult : movies;
 
-    if (error) {
-        return (
-            <div className="min-h-screen bg-[#1e1e2a] text-white flex flex-col">
-                <Navbar />
-                <div className="mx-20 my-8 flex-grow flex items-center justify-center">
-                    <p className="text-red-500">Error: {error}</p>
-                </div>
-                <Footer />
-            </div>
-        );
-    }
-
     return (
         <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin relative">
             <Navbar />
-            <div className="mx-20 my-8">
-                <h1 className="text-3xl font-bold mt-10 mb-5 capitalize">{category}</h1>
+
+            {/* MOBILE / TABLET SearchBar */}
+            <div className="block lg:hidden mx-4 sm:mx-8 md:mx-16 my-4">
                 <SearchBar
+                    moviesData={movies}
                     searchResult={handleSearch}
-                    setIsSearchActive={() => {}}
-                    movies={movies}
+                    setIsSearchActive={() => { }}
+                    isCategoryPage={true}
                 />
+            </div>
+
+            {/* DESKTOP SearchBar (fixed position) */}
+            <div className="hidden lg:block mb-6">
+                <SearchBar
+                    moviesData={movies}
+                    searchResult={handleSearch}
+                    setIsSearchActive={() => { }}
+                />
+            </div>
+
+            <div className="mx-4 sm:mx-8 md:mx-16 lg:mx-20 my-4">
+                <h1 className="text-3xl font-bold mt-10 mb-5 capitalize">{category}</h1>
+
+
 
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
@@ -84,22 +88,23 @@ function CategoryPage() {
                         <p>No movies found in this category.</p>
                     </div>
                 ) : (
-                    <div className="flex flex-wrap gap-[20px] mt-[16px]">
+                    <div className="grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 justify-items-center lg:justify-items-start">
                         {displayMovies.map((movie, idx) => (
-                            <MovieCard
-                                key={movie._id || idx}
-                                movieTitle={movie.title}
-                                imgSource={movie.poster}
-                                id = {movie._id}
-                            />
+                            <div key={movie._id || idx} className="text-center lg:text-left">
+                                <MovieCard
+                                    movieTitle={movie.title}
+                                    imgSource={movie.poster}
+                                    id={movie._id}
+                                />
+                            </div>
                         ))}
                     </div>
                 )}
             </div>
+
             <Footer />
         </div>
     );
 }
 
 export default CategoryPage;
-
