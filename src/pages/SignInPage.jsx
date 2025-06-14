@@ -1,38 +1,64 @@
-import { FaUser, FaLock } from "react-icons/fa";
+import { useState } from "react";
+import { FaLock } from "react-icons/fa";
+import { IoMail } from "react-icons/io5";
 import InputField from "../components/SignInAndSignOut/InputField";
 import SubmitButton from "../components/SignInAndSignOut/SubmitButton";
 import AlflixLogo from "../components/AlflixLogo";
-import { Link, useNavigate} from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 import GoogleLogo from '/src/assets/Google Logo.png';
 import FacebookLogo from '/src/assets/FacebookLogo.png';
 import MicrosoftLogo from '/src/assets/MicrosoftLogo.webp';
 
-
 function SignInPage() {
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const SignIn = (e) => {
+    const SignIn = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError(null);
+        
         const formData = new FormData(e.target);
-        const username = formData.get("username");
+        const email = formData.get("email");
         const password = formData.get("password");
         
-        console.log("Username:", username);
-        console.log("Password:", password);
-        
-        navigate("/home")
+        try {
+            const response = await fetch('/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password })
+            });
 
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+
+            if (data.success) {
+                // Store user data if needed (in state management or localStorage)
+                // For example: localStorage.setItem('user', JSON.stringify(data.data.user));
+                navigate("/home");
+            } else {
+                setError(data.message || 'Invalid credentials');
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            setError(err.message || 'Login failed. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
         <div className="min-h-screen text-white flex">
             {/* Left Side */}
             <div className="w-1/2 bg-[#1e1e2a] flex justify-center items-center">
-                {/* <h1 className="text-6xl font-bold">Welcome Back!</h1> */}
                 <AlflixLogo type="1" className="w-1/2 h-auto"/>
-
             </div>
 
             {/* Right Side */}
@@ -45,14 +71,14 @@ function SignInPage() {
 
                 <form action="" onSubmit={SignIn}>
                     <InputField
-                        name = "username"
+                        name="email"
                         type="text"
-                        placeholder="Username"
-                        icon={FaUser}
-                        label="USERNAME"
+                        placeholder="Email"
+                        icon={IoMail}
+                        label="EMAIL"
                     />
                     <InputField
-                        name = "password"
+                        name="password"
                         type="password"
                         placeholder="Enter password..."
                         icon={FaLock}
@@ -64,11 +90,14 @@ function SignInPage() {
                         <p className="font-light italic">Remember Me</p>
                     </div>
 
-                    <SubmitButton text="SIGN IN"/>
+                    <SubmitButton text={isLoading ? "SIGNING IN..." : "SIGN IN"} disabled={isLoading} />
                 </form>
+                
+                {error && (
+                    <p className="text-red-500 text-sm text-center my-2">{error}</p>
+                )}
 
                 <div className="text-center">
-
                     <p>Don't have an account? <Link to="/SignUp" className="text-[#8883bb]">Register</Link></p>
                     
                     <div className="flex items-center justify-center">
@@ -80,16 +109,12 @@ function SignInPage() {
                     <div className="flex items center justify-center">
                         <img src={GoogleLogo} alt="Google Logo" className="w-1/7 h-auto mx-5" />
                         <img src={FacebookLogo} alt="Facebook Logo" className="w-1/7 h-auto mx-5" />
-                        <img src={MicrosoftLogo} alt=" Microsoft Logo" className="w-1/7 h-auto mx-5" />
+                        <img src={MicrosoftLogo} alt="Microsoft Logo" className="w-1/7 h-auto mx-5" />
                     </div>
                 </div>
             </div>
         </div>
-
-
     )
-
-
 }
 
-export default SignInPage
+export default SignInPage;
