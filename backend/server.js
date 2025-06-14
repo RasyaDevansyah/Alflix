@@ -6,12 +6,26 @@ import Subscription from './models/subscription.model.js';
 import mongoose from 'mongoose';
 import User from './models/user.model.js';
 import UserDetail from './models/userdetail.model.js';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // if true: only transmit cookie over https
+        httpOnly: true, // prevents client-side JS from reading the cookie
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
 
 app.post('/api/subscription', async (req, res) => {
     const subscription = req.body;
@@ -22,6 +36,7 @@ app.post('/api/subscription', async (req, res) => {
 
     const newSubscription = new Subscription(subscription);
 
+
     try {
         await newSubscription.save();
         res.status(201).json({ success: true, data: newSubscription });
@@ -30,21 +45,40 @@ app.post('/api/subscription', async (req, res) => {
     }
 });
 
+
+app.get('/api/users/me', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ success: false, message: 'Not authenticated' });
+    }
+    res.status(200).json({ success: true, data: { user: req.session.user } });
+});
+
+app.post('/api/users/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Logout failed' });
+        }
+        res.clearCookie('connect.sid');
+        res.status(200).json({ success: true, message: 'Logged out successfully' });
+    });
+});
+
+
 app.post('/api/users/register', async (req, res) => {
     const { username, password, confirmPassword, email } = req.body;
 
     // Basic validation
     if (!username || !password || !email) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'Username, password, and email are required' 
+        return res.status(400).json({
+            success: false,
+            message: 'Username, password, and email are required'
         });
     }
 
     if (password !== confirmPassword) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'Passwords do not match' 
+        return res.status(400).json({
+            success: false,
+            message: 'Passwords do not match'
         });
     }
 
@@ -73,9 +107,9 @@ app.post('/api/users/register', async (req, res) => {
             success: false,
             message: 'Invalid email format'
         });
-        }
-        // Email must be all lowercase
-        if (email !== email.toLowerCase()) {
+    }
+    // Email must be all lowercase
+    if (email !== email.toLowerCase()) {
         return res.status(400).json({
             success: false,
             message: 'Email must be all lowercase'
@@ -86,14 +120,14 @@ app.post('/api/users/register', async (req, res) => {
         // Check if email already exists in either User or UserDetail
         const existingUser = await User.findOne({ email });
         const existingUserDetail = await UserDetail.findOne({ email });
-        
+
         if (existingUser || existingUserDetail) {
-            return res.status(409).json({ 
-                success: false, 
-                message: 'Email already exists' 
+            return res.status(409).json({
+                success: false,
+                message: 'Email already exists'
             });
         }
-        
+
         // Create new User
         const newUser = new User({
             username,
@@ -119,17 +153,20 @@ app.post('/api/users/register', async (req, res) => {
             await newUser.save({ session });
             await newUserDetail.save({ session });
             await session.commitTransaction();
-            
-            res.status(201).json({ 
-                success: true, 
+
+            // Return user data without sensitive information
+            res.status(200).json({
+                success: true,
                 data: {
-                    user: {
-                        id: newUser._id,
+                    user:{
+                        _id: newUser._id,
                         username: newUser.username,
                         email: newUser.email
                     }
                 }
             });
+
+
         } catch (error) {
             await session.abortTransaction();
             throw error; // This will be caught by the outer catch block
@@ -138,10 +175,10 @@ app.post('/api/users/register', async (req, res) => {
         }
     } catch (error) {
         console.error('Registration error:', error.message);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error registering user', 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            message: 'Error registering user',
+            error: error.message
         });
     }
 });
@@ -151,9 +188,9 @@ app.post('/api/users/login', async (req, res) => {
 
     // Basic validation
     if (!email || !password) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'Email and password are required' 
+        return res.status(400).json({
+            success: false,
+            message: 'Email and password are required'
         });
     }
 
@@ -169,40 +206,43 @@ app.post('/api/users/login', async (req, res) => {
     try {
         // Find user by email
         const user = await User.findOne({ email });
-        
+
         if (!user) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Invalid credentials' 
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
             });
         }
 
         // In production, you would compare hashed passwords here
         // For example: const isMatch = await bcrypt.compare(password, user.password);
         if (password !== user.password) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Invalid credentials' 
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
             });
         }
 
+        req.session.user = {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        };
+
         // Return user data without sensitive information
-        res.status(200).json({ 
-            success: true, 
+        res.status(200).json({
+            success: true,
             data: {
-                user: {
-                    id: user._id,
-                    username: user.username,
-                    email: user.email,
-                }
+                user: req.session.user
             }
         });
+
     } catch (error) {
         console.error('Login error:', error.message);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error during login', 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            message: 'Error during login',
+            error: error.message
         });
     }
 });
@@ -215,9 +255,9 @@ app.put('/api/users/:userId/subscription', async (req, res) => {
 
     // Validate inputs
     if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(subId)) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'Invalid user ID or subscription ID' 
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid user ID or subscription ID'
         });
     }
 
@@ -225,18 +265,18 @@ app.put('/api/users/:userId/subscription', async (req, res) => {
         // Check if user exists
         const userDetail = await UserDetail.findById(userId);
         if (!userDetail) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'User not found' 
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
             });
         }
 
         // Check if subscription exists
         const subscription = await Subscription.findById(subId);
         if (!subscription) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Subscription not found' 
+            return res.status(404).json({
+                success: false,
+                message: 'Subscription not found'
             });
         }
 
@@ -244,8 +284,8 @@ app.put('/api/users/:userId/subscription', async (req, res) => {
         userDetail.subId = subId;
         await userDetail.save();
 
-        res.status(200).json({ 
-            success: true, 
+        res.status(200).json({
+            success: true,
             data: {
                 userId: userDetail._id,
                 subId: userDetail.subId,
@@ -254,10 +294,10 @@ app.put('/api/users/:userId/subscription', async (req, res) => {
         });
     } catch (error) {
         console.error('Subscription update error:', error.message);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error updating subscription', 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            message: 'Error updating subscription',
+            error: error.message
         });
     }
 });
@@ -302,16 +342,16 @@ app.get('/api/movies/trending', async (req, res) => {
             }
             return acc;
         }, []);
-        
-        res.status(200).json({ 
-            success: true, 
-            data: uniqueMovies 
+
+        res.status(200).json({
+            success: true,
+            data: uniqueMovies
         });
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ 
-            message: 'Error fetching trending movies', 
-            error 
+        res.status(500).json({
+            message: 'Error fetching trending movies',
+            error
         });
     }
 });
@@ -322,7 +362,7 @@ app.get('/api/tags', async (req, res) => {
         // Get all unique tag IDs and names
         const tags = await Movie.aggregate([
             { $unwind: "$tags" },
-            { 
+            {
                 $group: {
                     _id: "$tags.id",
                     name: { $first: "$tags.name" },
@@ -331,16 +371,16 @@ app.get('/api/tags', async (req, res) => {
             },
             { $sort: { count: -1 } } // sort by most used tags first
         ]);
-        
-        res.status(200).json({ 
-            success: true, 
-            data: tags 
+
+        res.status(200).json({
+            success: true,
+            data: tags
         });
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ 
-            message: 'Error fetching tags', 
-            error 
+        res.status(500).json({
+            message: 'Error fetching tags',
+            error
         });
     }
 });
@@ -355,7 +395,7 @@ app.get('/api/movies', async (req, res) => {
         if (tagId) {
             filter['tags.id'] = parseInt(tagId);
         }
-        
+
         const movies = await Movie.find(filter);
         res.status(200).json({ success: true, data: movies });
     } catch (error) {

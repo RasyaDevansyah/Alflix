@@ -20,10 +20,10 @@ function App() {
   return (
     <main>
       <Routes>
-        <Route path="/" element={<WelcomePage />} />
+        <Route path="/Home" element={<WelcomePage />} />
         <Route path="/SignIn" element={<SignInPage />} />
         <Route path="/SignUp" element={<SignUpPage />} />
-        <Route path="/Home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/Subscription" element={<SubscriptionPage />} />
         <Route path="/Payment" element={<PaymentPage />} />
         <Route path="/VideoInfoPage/:id" element={<VideoInfoPage />} />
