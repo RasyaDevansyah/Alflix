@@ -94,7 +94,7 @@ function Navbar() {
 
                         <nav className="flex flex-col gap-4">
                             <Link
-                                to="/Home"
+                                to="/"
                                 onClick={toggleMenu}
                                 className="text-sm text-white font-semibold tracking-wide hover:text-purple-400"
                             >

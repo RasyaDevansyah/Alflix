@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import InputField from "../components/SignInAndSignOut/InputField";
@@ -13,6 +13,14 @@ function SignUpPage() {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [termsAgreed, setTermsAgreed] = useState(false);
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (user) {
+            navigate("/", { replace: true });
+        }
+    }, [user, navigate]);
+
 
     const SignUp = async (e) => {
         e.preventDefault();
