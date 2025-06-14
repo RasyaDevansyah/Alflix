@@ -15,6 +15,11 @@ function VideoInfoPage() {
   const [relatedMovies, setRelatedMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleToggleFavorite = () => {
+    setIsFavorite(prev => !prev);
+  };
 
   useEffect(() => {
     const fetchMovieData = async () => {
@@ -24,9 +29,8 @@ function VideoInfoPage() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
+
         if (data.success) {
-          // Transform API data to match your component's structure
           const transformedMovieData = {
             title: data.data.title.toUpperCase(),
             year: data.data.year.toString(),
@@ -35,21 +39,18 @@ function VideoInfoPage() {
             description: data.data.description,
             quote: data.data.quote,
             image: data.data.imgHeader,
-            imgSubheader: data.data.imgSubheader
+            imgSubheader: data.data.imgSubheader,
           };
-          
+
           const transformedCast = data.data.cast.map(cast => ({
             image: cast.castPicture,
             name: cast.actorName,
             role: cast.roleName
           }));
-          
+
           setMovieData(transformedMovieData);
           setCastMembers(transformedCast);
-          
-          // For related movies, you might want to fetch from another endpoint
-          // For now, we'll just set an empty array
-          setRelatedMovies([]);
+          setRelatedMovies([]); // Placeholder
         } else {
           throw new Error("Failed to fetch movie data");
         }
@@ -63,27 +64,20 @@ function VideoInfoPage() {
     fetchMovieData();
   }, [id]);
 
-  if (loading) {
-    return <div className="min-h-screen bg-[#1e1e2a] text-white flex items-center justify-center">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="min-h-screen bg-[#1e1e2a] text-white flex items-center justify-center">Error: {error}</div>;
-  }
-
-  if (!movieData) {
-    return <div className="min-h-screen bg-[#1e1e2a] text-white flex items-center justify-center">No movie data found</div>;
-  }
+  if (loading) return <div className="min-h-screen bg-[#1e1e2a] text-white flex items-center justify-center">Loading...</div>;
+  if (error) return <div className="min-h-screen bg-[#1e1e2a] text-white flex items-center justify-center">Error: {error}</div>;
+  if (!movieData) return <div className="min-h-screen bg-[#1e1e2a] text-white flex items-center justify-center">No movie data found</div>;
 
   return (
     <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">
       <Navbar />
       <PlayBanner poster={movieData.imgSubheader} />
-      <VideoTitleInfo {...movieData} />
-      <DescriptionSection
-        description={movieData.description}
-        quote={movieData.quote}
+      <VideoTitleInfo
+        {...movieData}
+        isFavorite={isFavorite}
+        onToggleFavorite={handleToggleFavorite}
       />
+      <DescriptionSection description={movieData.description} quote={movieData.quote} />
       <CastSection cast={castMembers} />
       <RelatedMovies movies={relatedMovies} />
       <Footer />
