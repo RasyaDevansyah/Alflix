@@ -5,9 +5,11 @@ import InputField from "../components/SignInAndSignOut/InputField";
 import SubmitButton from "../components/SignInAndSignOut/SubmitButton";
 import AlflixLogo from "../components/AlflixLogo";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../components/Context/AuthContext";
 
 function SignUpPage() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [termsAgreed, setTermsAgreed] = useState(false);
@@ -16,7 +18,7 @@ function SignUpPage() {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
-        
+
         const formData = new FormData(e.target);
         const username = formData.get("username");
         const email = formData.get("email");
@@ -32,41 +34,35 @@ function SignUpPage() {
         try {
             const response = await fetch('/api/users/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    username, 
-                    email, 
-                    password, 
-                    confirmPassword 
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password, confirmPassword }),
+                credentials: 'include'
             });
-
             const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Registration failed');
-            }
+            if (!response.ok) throw new Error(data.message || 'Registration failed');
 
-            if (data.success) {
+            // Automatically log in after registration
+            const loginResult = await login(email, password);
+            if (loginResult.success) {
                 navigate("/home");
             } else {
-                setError(data.message || 'Registration failed');
+                setError('Registration successful! Please log in.');
+                navigate("/");
             }
         } catch (err) {
-            console.error('Registration error:', err);
-            setError(err.message || 'Registration failed. Please try again.');
+            setError(err.message || 'Registration failed');
         } finally {
             setIsLoading(false);
         }
+
     }
 
     return (
         <div className="min-h-screen text-white flex">
             {/* Left Side */}
             <div className="w-1/2 bg-[#1e1e2a] flex justify-center items-center">
-                <AlflixLogo type="1" className="w-1/2 h-auto"/>
+                <AlflixLogo type="1" className="w-1/2 h-auto" />
             </div>
 
             {/* Right Side */}
@@ -111,17 +107,17 @@ function SignUpPage() {
                     />
 
                     <div className="flex items-center mb-4 ml-9">
-                        <input 
-                            type="checkbox" 
-                            className="mr-2" 
+                        <input
+                            type="checkbox"
+                            className="mr-2"
                             checked={termsAgreed}
                             onChange={(e) => setTermsAgreed(e.target.checked)}
                         />
                         <p className="font-light italic">I agree to the terms & conditions</p>
                     </div>
 
-                    <SubmitButton 
-                        text={isLoading ? "CREATING ACCOUNT..." : "SIGN UP"} 
+                    <SubmitButton
+                        text={isLoading ? "CREATING ACCOUNT..." : "SIGN UP"}
                         disabled={isLoading || !termsAgreed}
                     />
                 </form>

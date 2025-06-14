@@ -10,8 +10,12 @@ import GoogleLogo from '/src/assets/Google Logo.png';
 import FacebookLogo from '/src/assets/FacebookLogo.png';
 import MicrosoftLogo from '/src/assets/MicrosoftLogo.webp';
 
+import { useAuth } from "../components/Context/AuthContext";
+
+
 function SignInPage() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -25,30 +29,14 @@ function SignInPage() {
         const password = formData.get("password");
         
         try {
-            const response = await fetch('/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Login failed');
-            }
-
-            if (data.success) {
-                // Store user data if needed (in state management or localStorage)
-                // For example: localStorage.setItem('user', JSON.stringify(data.data.user));
+            const result = await login(email, password);
+            if (result.success) {
                 navigate("/home");
             } else {
-                setError(data.message || 'Invalid credentials');
+                setError(result.message || 'Login failed');
             }
         } catch (err) {
-            console.error('Login error:', err);
-            setError(err.message || 'Login failed. Please try again.');
+            setError(err.message || 'Login failed');
         } finally {
             setIsLoading(false);
         }
