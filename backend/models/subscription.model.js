@@ -1,33 +1,34 @@
 import mongoose from "mongoose";
 
 const subscriptionSchema = new mongoose.Schema({
-    SubName: {
+    title: {
         type: String,
         required: true,
         trim: true,
     },
-    SubDescription: {
+    description: {
         type: String,
         required: true,
         trim: true,
     },
-    SubPoints: [{
+    benefits: [{
         type: String,
         trim: true,
     }],
-    SubPrice: {
+    normalPrice: {
         type: Number,
         required: true,
     },
-    SubDiscountedPrice: {
+    discountedPrice: {
         type: Number,
         required: true,
     },
 }, {
-    timestamps: true
+    timestamps: false
 });
 
 const Subscription = mongoose.model("Subscription", subscriptionSchema);
 
 
 export default Subscription;
+
