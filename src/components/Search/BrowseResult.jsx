@@ -2,24 +2,28 @@ import React from 'react';
 import MovieCard from '../HomePage/MovieCard';
 
 const BrowseResult = ({ movies }) => {
-    // const noMoviesStyle = {
-    //     color: '#ccc',
-    //     fontSize: '18px',
-    //     textAlign: 'center',
-    //     width: '100%',
-    // };
+    if (!movies || movies.length === 0) {
+        return (
+            <div className="text-center text-gray-400 text-lg mt-10">
+                No movies found.
+            </div>
+        );
+    }
 
     return (
-        <div className="flex flex-wrap gap-[20px] mt-[16px]">
+        <div className="w-full px-4 sm:px-6 md:px-12 lg:px-16">
+            <div className="grid gap-6 sm:gap-8 mt-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6
+                            justify-center lg:justify-start">
                 {movies.map((movie, idx) => (
-                    <MovieCard 
-                    key={movie._id}
-                    movieTitle={movie.title}
-                    imgSource={movie.poster}
-                    number={idx+1} 
-                    id ={movie._id}
+                    <MovieCard
+                        key={movie._id}
+                        movieTitle={movie.title}
+                        imgSource={movie.poster}
+                        number={idx + 1}
+                        id={movie._id}
                     />
                 ))}
+            </div>
         </div>
     );
 };
