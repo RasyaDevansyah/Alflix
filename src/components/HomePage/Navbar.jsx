@@ -31,7 +31,7 @@ function Navbar() {
                 <div className="hidden lg:flex items-center gap-4">
                     <AlflixLogo type="2" className="w-1/5 h-auto" />
                     <Link
-                        to="/Home"
+                        to="/"
                         className="text-white text-xl font-bold tracking-widest hover:text-purple-400"
                     >
                         HOME
