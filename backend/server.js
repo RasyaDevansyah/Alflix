@@ -28,6 +28,7 @@ app.use(session({
     }
 }));
 
+
 app.post('/api/subscription', async (req, res) => {
     const subscription = req.body;
 
@@ -433,9 +434,13 @@ app.get('/api/movies/:id', async (req, res) => {
 const __dirname = path.resolve();
 
 app.use(express.static(path.join(__dirname, "/dist")));
+
+
 app.get("*all", (req, res) => {
 	res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
