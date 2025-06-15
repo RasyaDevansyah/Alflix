@@ -256,6 +256,179 @@ app.post('/api/users/login', async (req, res) => {
 });
 
 
+app.get('/api/users/:userId/details', async (req, res) => {
+    const { userId } = req.params;
+
+    // Validate user ID
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid user ID format'
+        });
+    }
+
+    try {
+        // Find user in User collection
+        const user = await User.findById(userId).select('email').lean();
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found in User collection'
+            });
+        }
+
+        // Find corresponding UserDetail using email
+        const userDetail = await UserDetail.findOne({ email: user.email })
+            .populate('subId', 'title description') // Optional: populate subscription details
+            .populate('history.movieId', 'title poster') // Optional: populate movie details
+            .lean();
+
+        if (!userDetail) {
+            return res.status(404).json({
+                success: false,
+                message: 'User details not found in UserDetail collection'
+            });
+        }
+
+        // Remove sensitive data before sending
+        const { password, ...safeDetails } = userDetail;
+
+        res.status(200).json({
+            success: true,
+            data: safeDetails
+        });
+
+    } catch (error) {
+        console.error('Error in /api/users/:userId/details:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error while fetching user details',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+
+app.put('/api/users/:userId/activity', async (req, res) => {
+    const { userId } = req.params;
+    const { movieId, duration, tags } = req.body;
+
+    // Validate inputs
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid user ID'
+        });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(movieId)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid movie ID'
+        });
+    }
+
+    if (duration && typeof duration !== 'number') {
+        return res.status(400).json({
+            success: false,
+            message: 'Duration must be a number'
+        });
+    }
+
+    try {
+        // Check if user exists in User model
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Find corresponding UserDetail using the email (since both models have email)
+        const userDetail = await UserDetail.findOne({ email: user.email });
+        if (!userDetail) {
+            return res.status(404).json({
+                success: false,
+                message: 'User details not found'
+            });
+        }
+
+        // Check if movie exists
+        const movie = await Movie.findById(movieId);
+        if (!movie) {
+            return res.status(404).json({
+                success: false,
+                message: 'Movie not found'
+            });
+        }
+
+
+
+        // Add watch hours if duration is provided
+        if (duration) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to start of day for grouping
+            
+            // Find existing watch hour entry for today
+            const existingEntry = userDetail.watchHours.find(entry => 
+                entry.date.getTime() === today.getTime()
+            );
+            
+            if (existingEntry) {
+                existingEntry.duration += duration;
+            } else {
+                userDetail.watchHours.push({
+                    date: today,
+                    duration: duration
+                });
+            }
+        }
+
+        // Add to history if not already there (prevent duplicates)
+        const existingHistoryItem = userDetail.history.find(item => 
+            item.movieId.equals(movieId)
+        );
+
+        if (!existingHistoryItem) {
+            const historyItem = {
+                movieId: movieId,
+                movieTags: tags ? tags.map(tag => ({
+                    tagId: tag.id,
+                    tagName: tag.name
+                })) : [],
+                timestamp: new Date()
+            };
+            userDetail.history.push(historyItem);
+        } else {
+            // Update timestamp if already exists
+            existingHistoryItem.timestamp = new Date();
+        }
+
+        
+        userDetail.watched = userDetail.history.length;
+        
+        // Save the updated user details
+        await userDetail.save();
+
+        res.status(200).json({
+            success: true,
+            data: {
+                watched: userDetail.watched,
+                watchHours: userDetail.watchHours,
+                history: userDetail.history
+            }
+        });
+
+    } catch (error) {
+        console.error('User activity update error:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Error updating user activity',
+            error: error.message
+        });
+    }
+});
 
 app.put('/api/users/:userId/subscription', async (req, res) => {
     const { userId } = req.params;
@@ -411,7 +584,6 @@ app.get('/api/movies', async (req, res) => {
         res.status(500).json({ message: 'Error fetching movies', error });
     }
 });
-
 
 app.get('/api/movies/:id', async (req, res) => {
     const { id } = req.params;

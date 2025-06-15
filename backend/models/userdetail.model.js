@@ -48,8 +48,7 @@ const userDetailSchema = new mongoose.Schema({
             movieTags: [
                 {
                     tagId: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: "Tag",
+                        type: Number,
                         required: true,
                     },
                     tagName: {

@@ -7,6 +7,14 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     base: '/', // Changed from './' for Vercel compatibility
+    server:
+    {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000',
+        },
+      },
+    },
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
