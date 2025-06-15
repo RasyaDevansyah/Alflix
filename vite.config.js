@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss(),
   ],
-  base: "/Alflix/",
+  base: './',
   server:
   {
     proxy: {

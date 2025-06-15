@@ -1,9 +1,18 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/HomePage/Navbar";
+import { useAuth } from "../components/Context/AuthContext";
+import { useEffect } from "react";
 
 const SubscriptionPlans = () => {
+  const { user } = useAuth(); 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user === null) {
+      navigate("/Home", { replace: true });
+    }
+  }, [user, navigate]);
+
 
   const plans = [
     {
