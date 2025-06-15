@@ -8,6 +8,8 @@ import User from './models/user.model.js';
 import UserDetail from './models/userdetail.model.js';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+
 
 dotenv.config();
 
@@ -426,6 +428,13 @@ app.get('/api/movies/:id', async (req, res) => {
         console.error(error.message);
         res.status(500).json({ message: 'Error fetching movie', error });
     }
+});
+
+const __dirname = path.resolve();
+
+app.use(express.static(path.join(__dirname, "/dist")));
+app.get("*all", (req, res) => {
+	res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });
 
 
