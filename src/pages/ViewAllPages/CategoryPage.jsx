@@ -88,7 +88,7 @@ function CategoryPage() {
                         <p>No movies found in this category.</p>
                     </div>
                 ) : (
-                    <div className="grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 justify-items-center lg:justify-items-start">
+                    <div className="grid gap-5 grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 justify-items-center lg:justify-items-start">
                         {displayMovies.map((movie, idx) => (
                             <div key={movie._id || idx} className="text-center lg:text-left">
                                 <MovieCard
