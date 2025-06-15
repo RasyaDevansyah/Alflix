@@ -23,12 +23,6 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
-      rollupOptions: {
-        external: [
-          // Add any assets that shouldn't be processed by Vite
-          '/src/assets/Alflix Logo.png'
-        ]
-      }
     }
   }
 });
