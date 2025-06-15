@@ -7,12 +7,12 @@ import { FaSignOutAlt } from "react-icons/fa";
 import profile from '/src/assets/profile-pic.png';
 import profilebanner from '/src/assets/profile-banner.png';
 
-import BokuNohero from '/src/assets/MoviePosters/BokuNohero.png';
-import jujutsuKaisen from '/src/assets/MoviePosters/JujutsuKaisen.png';
-import spongebob from '/src/assets/MoviePosters/Spongebob.png';
+import BokuNohero from '/src/assets/MoviePosters/BokunoHero.png';
+import jujutsuKaisen from '/src/assets/MoviePosters/jujutsukaisen.png';
+import spongebob from '/src/assets/MoviePosters/spongebob.png';
 import spiritedAway from '/src/assets/MoviePosters/Spirited Away.png';
 import avatar from '/src/assets/MoviePosters/avatar.png';
-import neZha from '/src/assets/MoviePosters/NeZha.png';
+import neZha from '/src/assets/MoviePosters/nezha.png';
 
 import phoneIcon from '/src/assets/Phone.png';
 import computerIcon from '/src/assets/Computer.png';
