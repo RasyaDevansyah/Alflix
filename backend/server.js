@@ -437,8 +437,8 @@ app.get("*all", (req, res) => {
 	res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });
 
-
-app.listen(5000, () => {
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
     connectDB();
-    console.log('Server is running on port 5000 http://localhost:5000');
+    console.log('Server is running on port http://localhost:' + PORT);
 });
