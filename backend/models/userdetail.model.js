@@ -62,6 +62,27 @@ const userDetailSchema = new mongoose.Schema({
                 default: Date.now,
             }
         }
+    ],
+    favorites: [
+        {
+            movieId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Movie",
+                required: true,
+            },
+            movieTags: [
+                {
+                    tagId: {
+                        type: Number,
+                        required: true,
+                    },
+                    tagName: {
+                        type: String,
+                        required: true,
+                    }
+                }
+            ]
+        }
     ]
 }, {
     timestamps: true

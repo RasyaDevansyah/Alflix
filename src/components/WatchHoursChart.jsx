@@ -12,7 +12,7 @@ const data = [
   { day: "Sun", hours: 3 },
 ];
 
-function WatchHoursChart() {
+function WatchHoursChart({data}) {
   return (
     <ResponsiveContainer width="100%" height={250}>
       <BarChart data={data}>

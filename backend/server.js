@@ -280,7 +280,8 @@ app.get('/api/users/:userId/details', async (req, res) => {
         // Find corresponding UserDetail using email
         const userDetail = await UserDetail.findOne({ email: user.email })
             .populate('subId', 'title description') // Optional: populate subscription details
-            .populate('history.movieId', 'title poster') // Optional: populate movie details
+            .populate('history.movieId', 'imgHeader title') // Optional: populate movie details
+            .populate('favorites.movieId', 'imgHeader title') // Optional: populate movie details
             .lean();
 
         if (!userDetail) {
@@ -308,6 +309,125 @@ app.get('/api/users/:userId/details', async (req, res) => {
     }
 });
 
+app.put('/api/users/:userId/favorites', async (req, res) => {
+    const { userId } = req.params;
+    const { movieId, action } = req.body;
+
+    // Validate inputs
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid user ID'
+        });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(movieId)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid movie ID'
+        });
+    }
+
+    if (!['add', 'remove'].includes(action)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Action must be either "add" or "remove"'
+        });
+    }
+
+    try {
+        // Find user in User collection
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Find corresponding UserDetail using email
+        const userDetail = await UserDetail.findOne({ email: user.email });
+        if (!userDetail) {
+            return res.status(404).json({
+                success: false,
+                message: 'User details not found'
+            });
+        }
+
+        // Check if movie exists and get its details
+        const movie = await Movie.findById(movieId);
+        if (!movie) {
+            return res.status(404).json({
+                success: false,
+                message: 'Movie not found'
+            });
+        }
+
+        let message = '';
+
+        if (action === 'add') {
+            // Check if already in favorites
+            const alreadyFavorite = userDetail.favorites.find(fav => 
+                fav.movieId.equals(movieId)
+            );
+
+            if (alreadyFavorite) {
+                message = 'Movie already in favorites';
+                updatedFavorites = userDetail.favorites;
+            } else {
+                const favoriteItem = {
+                    movieId: movieId,
+                    movieTags: movie.tags ? movie.tags.map(tag => ({
+                        tagId: tag.id,
+                        tagName: tag.name
+                    })) : []
+                };
+                userDetail.favorites.push(favoriteItem);
+                message = 'Movie added to favorites';
+            }
+        } else if (action === 'remove') {
+            // Remove from favorites
+            const initialCount = userDetail.favorites.length;
+            userDetail.favorites = userDetail.favorites.filter(
+                fav => !fav.movieId.equals(movieId)
+            );
+            const removedCount = initialCount - userDetail.favorites.length;
+            message = removedCount > 0 
+                ? 'Movie removed from favorites' 
+                : 'Movie was not in favorites';
+        }
+
+        // Save the updated user details
+        await userDetail.save();
+
+        // Populate favorites with movie details before sending response
+        const populatedFavorites = await UserDetail.populate(userDetail, {
+            path: 'favorites.movieId',
+            select: 'title poster'
+        });
+
+        res.status(200).json({
+            success: true,
+            message: message,
+            data: {
+                favorites: populatedFavorites.favorites.map(fav => ({
+                    movieId: fav.movieId._id,
+                    title: fav.movieId.title,
+                    poster: fav.movieId.poster,
+                    tags: fav.movieTags
+                }))
+            }
+        });
+
+    } catch (error) {
+        console.error('Favorites update error:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Error updating favorites',
+            error: error.message
+        });
+    }
+});
 
 app.put('/api/users/:userId/activity', async (req, res) => {
     const { userId } = req.params;
@@ -393,7 +513,7 @@ app.put('/api/users/:userId/activity', async (req, res) => {
         if (!existingHistoryItem) {
             const historyItem = {
                 movieId: movieId,
-                movieTags: tags ? tags.map(tag => ({
+                movieTags: movie.tags ? movie.tags.map(tag => ({
                     tagId: tag.id,
                     tagName: tag.name
                 })) : [],
@@ -569,16 +689,72 @@ app.get('/api/tags', async (req, res) => {
 app.get('/api/movies', async (req, res) => {
     try {
         const { tag, tagId } = req.query;
+        const tagWeights = req.body; // { tagId: watchCount }
+
         const filter = {};
-        if (tag) {
-            filter['tags.name'] = { $regex: new RegExp(tag, 'i') };
-        }
+        if (tag) filter['tags.name'] = { $regex: new RegExp(tag, 'i') };
         if (tagId) {
-            filter['tags.id'] = parseInt(tagId);
+            const tagIds = tagId.split(',').map(Number);
+            filter['tags.id'] = { $in: tagIds };
         }
 
+        // Regular filtered results if no weights
+        if (!tagWeights || Object.keys(tagWeights).length === 0) {
+            const movies = await Movie.find(filter);
+            return res.status(200).json({ success: true, data: movies });
+        }
+
+        // Get all candidate movies
         const movies = await Movie.find(filter);
-        res.status(200).json({ success: true, data: movies });
+        
+        // Calculate scores for each movie
+        const scoredMovies = movies.map(movie => {
+            let score = 0;
+            movie.tags.forEach(tag => {
+                score += tagWeights[tag.id] || 0;
+            });
+            return { movie, score };
+        });
+
+        // Filter out movies with zero score
+        const filteredScored = scoredMovies.filter(item => item.score > 0);
+        
+        if (filteredScored.length === 0) {
+            return res.status(200).json({ success: true, data: movies });
+        }
+
+        // Create weighted pool
+        let recommendationPool = [];
+        filteredScored.forEach(({ movie, score }) => {
+            // Use logarithmic scaling to prevent domination by huge weights
+            const count = Math.ceil(Math.log(score + 1) * 3); // +1 to avoid log(0)
+            recommendationPool.push(...Array(count).fill(movie));
+        });
+
+        // Shuffle and deduplicate
+        recommendationPool = shuffleArray(recommendationPool);
+        const seenIds = new Set();
+        const uniqueMovies = [];
+        
+        for (const movie of recommendationPool) {
+            if (!seenIds.has(movie._id.toString())) {
+                seenIds.add(movie._id.toString());
+                uniqueMovies.push(movie);
+            }
+        }
+
+        // Sort by original score for fallback ordering
+        uniqueMovies.sort((a, b) => {
+            const aScore = scoredMovies.find(m => m.movie._id.equals(a._id)).score;
+            const bScore = scoredMovies.find(m => m.movie._id.equals(b._id)).score;
+            return bScore - aScore;
+        });
+
+        res.status(200).json({
+            success: true,
+            data: uniqueMovies,
+            isRecommendation: true
+        });
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: 'Error fetching movies', error });
