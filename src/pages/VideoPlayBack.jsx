@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Navbar from "../components/HomePage/Navbar";
-import beautyVideo from "/src/assets/Video/BeautyAndTheBeast.MP4";
+import beautyVideo from "/src/assets/Video/BeautyAndTheBeast.mp4";
 import { FaPlay, FaPause, FaVolumeUp, FaExpand, FaClosedCaptioning, FaCog } from "react-icons/fa";
 
 function VideoPlayBack() {
