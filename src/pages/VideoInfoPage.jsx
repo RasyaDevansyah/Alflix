@@ -50,7 +50,23 @@ function VideoInfoPage() {
 
           setMovieData(transformedMovieData);
           setCastMembers(transformedCast);
-          setRelatedMovies([]); // Placeholder
+
+
+            // Fetch related movies from trending endpoint
+            try {
+            const trendingRes = await fetch('/api/movies/trending');
+            if (!trendingRes.ok) {
+              throw new Error(`Trending fetch error! status: ${trendingRes.status}`);
+            }
+            const trendingData = await trendingRes.json();
+            if (trendingData.success && Array.isArray(trendingData.data)) {
+              setRelatedMovies(trendingData.data.slice(0,5));
+            } else {
+              setRelatedMovies([]);
+            }
+            } catch (trendingErr) {
+            setRelatedMovies([]);
+            }
         } else {
           throw new Error("Failed to fetch movie data");
         }

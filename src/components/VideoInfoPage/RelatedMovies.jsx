@@ -8,8 +8,9 @@ export default function RelatedMovies({ movies }) {
         {movies.map((movie, index) => (
           <MovieCardLandscape
             key={index}
-            imageSrc={movie.image}
+            imageSrc={movie.imgHeader}
             movieTitle={movie.title}
+            id={movie._id}
           />
         ))}
         <div className="flex items-center justify-center h-48 w-20 md:w-30">

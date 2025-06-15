@@ -1,6 +1,10 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 
-function MovieCardLandscape({ imageSrc, movieTitle }) {
+function MovieCardLandscape({ imageSrc, movieTitle , id}) {
+    const handleLinkClick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <div className="flex flex-col relative flex-shrink-0 w-72 sm:w-80 group cursor-pointer transition-transform hover:scale-105">
             
@@ -14,14 +18,18 @@ function MovieCardLandscape({ imageSrc, movieTitle }) {
             </div>
 
             {/* Movie Title */}
-            <p className="mt-2 text-lg sm:text-xl leading-[1.6] tracking-[0.15em] font-bold line-clamp-2">
+            <p className="mt-2 text-lg sm:text-xl leading-[1.6] tracking-[0.15em] font-bold line-clamp-1 overflow-hidden text-ellipsis whitespace-normal">
                 {movieTitle}
             </p>
 
             {/* Watch Label */}
-            <p className="text-sm sm:text-base text-[#B8B1FF] tracking-[0.15em] group-hover:underline">
+            <Link 
+                to={`/VideoInfoPage/${id}`}
+                className="text-sm sm:text-base text-[#B8B1FF] tracking-[0.15em] group-hover:underline"
+                onClick={handleLinkClick}
+            >
                 watch &gt;
-            </p>
+            </Link>
         </div>
     );
 }
