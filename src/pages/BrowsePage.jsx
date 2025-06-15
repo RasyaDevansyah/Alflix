@@ -97,7 +97,7 @@ function BrowsePage() {
                     result.length > 0 ? (
                         <div className="mt-8 flex justify-center lg:justify-start">
                             <div className="w-full px-4 sm:px-6 md:px-12 lg:px-0">
-                                <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center lg:text-left">
+                                <h2 className="text-xl mx-4 sm:text-2xl font-bold mb-4 text-center lg:text-left sm:mx-8 md:mx-16 lg:mx-20">
                                     Search Results
                                 </h2>
                                 <BrowseResult movies={result} />

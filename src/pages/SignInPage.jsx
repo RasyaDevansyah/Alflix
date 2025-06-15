@@ -54,12 +54,12 @@ function SignInPage() {
     return (
         <div className="min-h-screen text-white flex">
             {/* Left Side */}
-            <div className="w-1/2 bg-[#1e1e2a] flex justify-center items-center">
+            <div className="w-0 sm:w-1/4 md:w-1/4 lg:w-1/2 bg-[#1e1e2a] flex justify-center items-center">
                 <AlflixLogo type="1" className="w-1/2 h-auto" />
             </div>
 
             {/* Right Side */}
-            <div className="w-1/2 pl-40 pr-40 pt-20 bg-[#302e3b]">
+            <div className="pl-5 pr-5 pt-20 sm:pl-10 sm:pr-10 sm:pt-20 md:pl-30 md:pr-30 md:pt-20 w-full sm:w-3/4 md:w-3/4 lg:w-1/2 lg:pl-40 lg:pr-40 lg:pt-20 bg-[#302e3b]">
                 <h1 className="text-4xl font-bold text-center">SIGN IN</h1>
 
                 <div className="flex justify-center">
