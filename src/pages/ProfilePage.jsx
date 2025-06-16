@@ -9,10 +9,10 @@ import profilebanner from '/src/assets/profile-banner.png';
 
 import phoneIcon from '/src/assets/Phone.png';
 import computerIcon from '/src/assets/Computer.png';
+
 import { useAuth } from "../components/Context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 function ProfilePage() {
     const navigate = useNavigate();
@@ -49,30 +49,27 @@ function ProfilePage() {
         }
     };
 
-    // Prepare recent watches from history
     const recentWatches = userDetails?.history?.map(item => ({
         title: item.movieId.title,
         image: item.movieId.imgHeader,
-        timestamp: item.timestamp
+        timestamp: item.timestamp,
+        movieId: item.movieId._id,
+        season: item.season,
+        episode: item.episode
     })) || [];
 
     recentWatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-
-    console.log(userDetails)
     const favorites = userDetails?.favorites?.map(item => ({
         title: item.movieId.title,
         image: item.movieId.imgHeader
     })) || [];
 
-
-    // Calculate watch hours for the chart
     const watchHoursData = userDetails?.watchHours?.map(item => ({
         date: new Date(item.date).toLocaleDateString(),
-        hours: item.duration / 60 // Convert minutes to hours
+        hours: item.duration / 60
     })) || [];
 
-    // Calculate genre distribution for analytics
     const genreData = {};
     userDetails?.history?.forEach(item => {
         item.movieTags.forEach(tag => {
@@ -80,16 +77,13 @@ function ProfilePage() {
         });
     });
 
-    // Convert genreData object to array of objects for chart
     const genreChartData = Object.entries(genreData).map(([genre, count]) => ({
         genre,
         count
     }));
 
     genreChartData.sort((a, b) => b.count - a.count);
-
-    const topGenreData = genreChartData.slice(0,5)
-    
+    const topGenreData = genreChartData.slice(0, 5);
     const mostWatchedGenre = genreChartData.length > 0 ? genreChartData[0].genre : "None";
 
     return (
@@ -127,7 +121,7 @@ function ProfilePage() {
                     <div>
                         <h3 className="text-2xl font-bold mb-4">Recent Watch</h3>
                         <div className="space-y-4">
-                            {recentWatches.slice(0,4).map((item, index) => (
+                            {recentWatches.slice(0, 4).map((item, index) => (
                                 <WatchItem key={index} {...item} />
                             ))}
                         </div>
@@ -135,8 +129,8 @@ function ProfilePage() {
 
                     <div>
                         <h3 className="text-2xl font-bold mb-4">Favorites</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            {favorites.slice(0,4).map((item, index) => (
+                        <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
+                            {favorites.map((item, index) => (
                                 <FavoriteItem key={index} {...item} />
                             ))}
                         </div>
@@ -155,7 +149,6 @@ function ProfilePage() {
                         </div>
                         <div className="bg-[#1E1E2A] p-4 rounded-lg">
                             <h4 className="mb-2 font-semibold">Movie Analytics</h4>
-                            {/* Pass genreChartData instead of Object.entries(genreData) */}
                             <MovieAnalyticsChart data={topGenreData} />
                             <p className="text-sm text-gray-400 mt-2">Most Watched Genre: {mostWatchedGenre}</p>
                         </div>
@@ -185,15 +178,26 @@ function ProfilePage() {
     );
 }
 
-function WatchItem({ title, season, episode, image, timestamp }) {
+function WatchItem({ title, season, episode, image, timestamp, movieId }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/VideoInfoPage/${movieId}`);
+    };
+
     return (
-        <div className="flex items-center bg-[#1E1E2A] p-3 rounded-lg">
+        <div
+            className="flex items-center bg-[#1E1E2A] p-3 rounded-lg cursor-pointer transition-transform hover:scale-105"
+            onClick={handleClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && handleClick()}
+        >
             <img src={image} alt={title} className="w-[100px] h-[60px] object-cover rounded mr-4" />
             <div>
                 <p className="font-semibold">{title}</p>
                 <p className="text-sm text-gray-400">
-                    {season && `${season} · `}{episode && `${episode} · `}
-                    Watched on {new Date(timestamp).toLocaleDateString()}
+                    {season && `${season} · `}{episode && `${episode} · `}Watched on {new Date(timestamp).toLocaleDateString()}
                 </p>
             </div>
         </div>
