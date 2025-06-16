@@ -1,6 +1,13 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const MovieCard = ({ movieTitle, imgSource, number, id }) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        // Navigate to the VideoInfoPage with the movie ID
+        navigate(`/VideoInfoPage/${id}`);
+    }
+
     return (
         <div className="w-30 sm:w-35 md:w-40 lg:w-60 h-auto relative flex-shrink-0">
             {/* Number Badge */}
@@ -11,18 +18,23 @@ const MovieCard = ({ movieTitle, imgSource, number, id }) => {
             )}
 
             {/* Movie Poster and Details */}
-            <div className="flex flex-col items-center">
-                {/* Poster Image */}
-                <div className="w-auto h-45 sm:h-65 md:h-75 lg:h-85 overflow-hidden rounded-lg shadow-lg shadow-[#FFFFFF33]">
-                    <img
-                        src={imgSource}
-                        alt={movieTitle}
-                        className="w-full h-full object-cover"
-                    />
-                </div>
+            <div className="flex flex-col items-center mb-2 mt-3 group cursor-pointer transition-transform hover:scale-105">
 
-                {/* Movie Title and Watch Link */}
-                <div className="w-full mt-3 sm:mt-4 text-left tracking-[0.1em] sm:tracking-[0.15em] pl-2">
+                <div
+                    className="w-full mt-3 sm:mt-4 text-left px-1"
+                    onClick={handleClick}
+                    role='button'
+                    tabIndex={0}
+                >
+                    {/* Poster Image */}
+                    <div className="w-auto h-45 sm:h-65 md:h-75 lg:h-85 overflow-hidden rounded-lg shadow-lg shadow-[#FFFFFF33]">
+                        <img
+                            src={imgSource}
+                            alt={movieTitle}
+                            className="w-full h-full object-cover"
+                            loading='lazy'
+                        />
+                    </div>
                     <p
                         className="text-white text-sm sm:text-base md:text-lg font-bold overflow-hidden text-ellipsis whitespace-normal"
                         style={{
@@ -34,13 +46,9 @@ const MovieCard = ({ movieTitle, imgSource, number, id }) => {
                     >
                         {movieTitle}
                     </p>
-
-                    <Link
-                        to={`/VideoInfoPage/${id}`}
-                        className="text-violet-500 text-sm sm:text-base"
-                    >
-                        {"Watch >"}
-                    </Link>
+                    <div className="text-sm sm:text-base text-violet-500 tracking-[0.15em] group-hover:underline">
+                        Watch &gt;
+                    </div>
                 </div>
             </div>
         </div>

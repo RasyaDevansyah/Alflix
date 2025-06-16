@@ -44,26 +44,22 @@ function TrendingSection() {
                     
                     {/* Mobile & Tablet: Horizontal Scroll */}
                     <div className="flex lg:hidden gap-6 overflow-x-auto scrollbar-hide scroll-smooth">
-                        {trendingMovies.slice(0, 4).map((movie, index) => (
-                            <div key={movie._id} className="min-w-[220px] flex-shrink-0">
+                        {trendingMovies.slice(0, 4).map((movie) => (
                                 <MovieCard
                                     movieTitle={movie.title.toUpperCase()}
                                     imgSource={movie.poster}
-                                    number={(index + 1).toString()}
                                     id={movie._id}
                                 />
-                            </div>
                         ))}
                     </div>
 
                     {/* Desktop only: Grid */}
-                    <div className="hidden lg:grid grid-cols-4 gap-6">
-                        {trendingMovies.slice(0, 4).map((movie, index) => (
+                    <div className="hidden lg:grid grid-cols-4 gap-90 max-w-6xl mx-auto justify-items-center">
+                        {trendingMovies.slice(0, 4).map((movie) => (
                             <MovieCard
                                 key={movie._id}
                                 movieTitle={movie.title.toUpperCase()}
                                 imgSource={movie.poster}
-                                number={(index + 1).toString()}
                                 id={movie._id}
                             />
                         ))}

@@ -5,7 +5,7 @@ import MovieRow from '../components/HomePage/MovieRow';
 import Footer from '../components/Footer';
 import SearchBar from '../components/Search/SearchBar.jsx';
 import SearchResult from '../components/Search/SearchResult.jsx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../components/Context/AuthContext.jsx';
 
 function HomePage() {
@@ -15,7 +15,7 @@ function HomePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [allMovies, setAllMovies] = useState([]);
-    
+
     const { user } = useAuth();
     const [recommendedMovies, setRecomendedMovies] = useState([]);
     const [topGenres, setTopGenres] = useState([]);
@@ -159,17 +159,35 @@ function HomePage() {
         id: movie._id
     });
 
+    const wrapperRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                setIsSearchActive(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">
             <Navbar />
             <Banner />
-            <div className="px-4 py-4 md:px-8 md:py-6 flex flex-col items-center md:items-end">
+            <div
+                ref={wrapperRef}
+                className="px-4 py-4 md:px-8 md:py-6 flex flex-col items-center md:items-end relative z-50"
+            >
                 <SearchBar
                     moviesData={allMovies}
                     searchResult={setResult}
                     setIsSearchActive={setIsSearchActive}
                 />
-                {result && <SearchResult result={result} />}
+                {isSearchActive && result && <SearchResult result={result} />}
             </div>
 
             <TrendingSection />

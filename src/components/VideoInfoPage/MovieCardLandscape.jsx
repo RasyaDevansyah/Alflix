@@ -33,7 +33,7 @@ function MovieCardLandscape({ imageSrc, movieTitle, id }) {
 
             {/* Watch Label */}
             <div className="text-sm sm:text-base text-[#B8B1FF] tracking-[0.15em] group-hover:underline">
-                watch &gt;
+                Watch &gt;
             </div>
         </div>
     );

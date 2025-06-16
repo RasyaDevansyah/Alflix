@@ -19,7 +19,6 @@ const BrowseResult = ({ movies }) => {
                         key={movie._id}
                         movieTitle={movie.title}
                         imgSource={movie.poster}
-                        number={idx + 1}
                         id={movie._id}
                     />
                 ))}
