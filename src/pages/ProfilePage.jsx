@@ -50,15 +50,17 @@ function ProfilePage() {
     };
 
     // Prepare recent watches from history
-    const recentWatches = userDetails?.history?.slice(0, 3).map(item => ({
+    const recentWatches = userDetails?.history?.map(item => ({
         title: item.movieId.title,
         image: item.movieId.imgHeader,
         timestamp: item.timestamp
     })) || [];
 
+    recentWatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
 
     console.log(userDetails)
-    const favorites = userDetails?.favorites?.slice(0, 3).map(item => ({
+    const favorites = userDetails?.favorites?.map(item => ({
         title: item.movieId.title,
         image: item.movieId.imgHeader
     })) || [];
@@ -125,7 +127,7 @@ function ProfilePage() {
                     <div>
                         <h3 className="text-2xl font-bold mb-4">Recent Watch</h3>
                         <div className="space-y-4">
-                            {recentWatches.map((item, index) => (
+                            {recentWatches.slice(0,4).map((item, index) => (
                                 <WatchItem key={index} {...item} />
                             ))}
                         </div>
@@ -134,7 +136,7 @@ function ProfilePage() {
                     <div>
                         <h3 className="text-2xl font-bold mb-4">Favorites</h3>
                         <div className="grid grid-cols-2 gap-4">
-                            {favorites.map((item, index) => (
+                            {favorites.slice(0,4).map((item, index) => (
                                 <FavoriteItem key={index} {...item} />
                             ))}
                         </div>
