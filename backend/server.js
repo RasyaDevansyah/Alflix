@@ -686,7 +686,8 @@ app.get('/api/tags', async (req, res) => {
     }
 });
 
-app.get('/api/movies', async (req, res) => {
+
+app.post('/api/movies', async (req, res) => {
     try {
         const { tag, tagId } = req.query;
         const tagWeights = req.body; // { tagId: watchCount }
@@ -697,8 +698,6 @@ app.get('/api/movies', async (req, res) => {
             const tagIds = tagId.split(',').map(Number);
             filter['tags.id'] = { $in: tagIds };
         }
-
-        // Regular filtered results if no weights
         if (!tagWeights || Object.keys(tagWeights).length === 0) {
             const movies = await Movie.find(filter);
             return res.status(200).json({ success: true, data: movies });
@@ -711,7 +710,7 @@ app.get('/api/movies', async (req, res) => {
         const scoredMovies = movies.map(movie => {
             let score = 0;
             movie.tags.forEach(tag => {
-                score += tagWeights[tag.id] || 0;
+                score += tagWeights[String(tag.id)] || 0;
             });
             return { movie, score };
         });
@@ -743,7 +742,17 @@ app.get('/api/movies', async (req, res) => {
             }
         }
 
+        // Helper function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         // Sort by original score for fallback ordering
+        // uniqueMovies.sort(() => Math.random() - 0.5);
         uniqueMovies.sort((a, b) => {
             const aScore = scoredMovies.find(m => m.movie._id.equals(a._id)).score;
             const bScore = scoredMovies.find(m => m.movie._id.equals(b._id)).score;
@@ -755,6 +764,26 @@ app.get('/api/movies', async (req, res) => {
             data: uniqueMovies,
             isRecommendation: true
         });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Error fetching movies', error });
+    }
+});
+
+app.get('/api/movies', async (req, res) => {
+    try {
+        const { tag, tagId } = req.query;
+
+        const filter = {};
+        if (tag) filter['tags.name'] = { $regex: new RegExp(tag, 'i') };
+        if (tagId) {
+            const tagIds = tagId.split(',').map(Number);
+            filter['tags.id'] = { $in: tagIds };
+        }
+
+        const movies = await Movie.find(filter);
+        return res.status(200).json({ success: true, data: movies });
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: 'Error fetching movies', error });

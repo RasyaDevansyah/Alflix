@@ -13,14 +13,6 @@ export default function RelatedMovies({ movies }) {
             id={movie._id}
           />
         ))}
-        <div className="flex items-center justify-center h-48 w-20 md:w-30">
-          <div className="flex flex-col items-center">
-            <button className="bg-gray-600 text-white rounded-full w-14 h-14 md:w-20 md:h-20 flex items-center justify-center hover:bg-gray-700 transition-colors text-3xl md:text-5xl font-bold">
-              &gt;
-            </button>
-            <p className="font-bold text-sm md:text-xl mt-1">more</p>
-          </div>
-        </div>
       </div>
     </div>
   );

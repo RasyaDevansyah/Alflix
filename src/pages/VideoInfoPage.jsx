@@ -40,6 +40,7 @@ function VideoInfoPage() {
             quote: data.data.quote,
             image: data.data.imgHeader,
             imgSubheader: data.data.imgSubheader,
+            tags: data.data.tags // Keep the tags for related movies
           };
 
           const transformedCast = data.data.cast.map(cast => ({
@@ -51,22 +52,13 @@ function VideoInfoPage() {
           setMovieData(transformedMovieData);
           setCastMembers(transformedCast);
 
-
-            // Fetch related movies from trending endpoint
-            try {
-            const trendingRes = await fetch('/api/movies/trending');
-            if (!trendingRes.ok) {
-              throw new Error(`Trending fetch error! status: ${trendingRes.status}`);
-            }
-            const trendingData = await trendingRes.json();
-            if (trendingData.success && Array.isArray(trendingData.data)) {
-              setRelatedMovies(trendingData.data.slice(0,5));
-            } else {
-              setRelatedMovies([]);
-            }
-            } catch (trendingErr) {
+          // If we have tags, fetch related movies
+          if (data.data.tags && data.data.tags.length > 0) {
+            fetchRelatedMovies(data.data.tags);
+          } else {
             setRelatedMovies([]);
-            }
+          }
+          
         } else {
           throw new Error("Failed to fetch movie data");
         }
@@ -74,6 +66,45 @@ function VideoInfoPage() {
         setError(err.message);
       } finally {
         setLoading(false);
+      }
+    };
+
+    const fetchRelatedMovies = async (tags) => {
+      try {
+        // Create tag weights object (all weights equal to 1 initially)
+        const tagWeights = {};
+        tags.forEach(tag => {
+          tagWeights[tag.id] = 1;
+        });
+
+        // Create comma-separated list of tag IDs
+        const tagIds = tags.map(tag => tag.id).join(',');
+
+        const response = await fetch(`/api/movies?tagId=${tagIds}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(tagWeights)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Related movies fetch error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        
+        if (data.success && Array.isArray(data.data)) {
+          // Filter out the current movie from related movies
+          const filtered = data.data.filter(movie => String(movie._id) !== String(id));
+          setRelatedMovies(filtered.slice(0, 5));
+        } else {
+          setRelatedMovies([]);
+        }
+      } catch (err) {
+        console.error("Error fetching related movies:", err);
+        setRelatedMovies([]);
       }
     };
 
