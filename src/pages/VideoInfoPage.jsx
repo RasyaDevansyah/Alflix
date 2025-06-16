@@ -174,7 +174,7 @@ function VideoInfoPage() {
   return (
     <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">
       <Navbar />
-      <PlayBanner poster={movieData.imgSubheader} />
+      <PlayBanner poster={movieData.imgSubheader} isloggedIn={user !== null}/>
       <VideoTitleInfo
         {...movieData}
         isFavorite={isFavorite}
