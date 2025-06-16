@@ -3,6 +3,9 @@ import Navbar from "../components/HomePage/Navbar";
 import { Link } from "react-router-dom";
 
 const PaymentSuccessPage = () => {
+
+  
+
   return (
     <div className="min-h-screen bg-[#0c1022] text-white flex flex-col">
       <Navbar />

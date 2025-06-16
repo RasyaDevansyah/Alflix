@@ -25,7 +25,7 @@ function App() {
         <Route path="/SignUp" element={<SignUpPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/Subscription" element={<SubscriptionPage />} />
-        <Route path="/Payment" element={<PaymentPage />} />
+        <Route path="/Payment/:subId" element={<PaymentPage />} />
         <Route path="/VideoInfoPage/:id" element={<VideoInfoPage />} />
         <Route path="/BrowsePage" element={<BrowsePage />} />
         <Route path="/history" element={<HistoryPage />} />

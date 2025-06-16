@@ -46,6 +46,17 @@ app.post('/api/subscription', async (req, res) => {
     }
 });
 
+app.get('/api/subscriptions', async (req, res) => {
+    try {
+        const subscriptions = await Subscription.find();
+        res.status(200).json({ success: true, data: subscriptions });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error fetching subscriptions', error: error.message });
+    }
+});
+
+
+
 
 app.get('/api/users/me', (req, res) => {
     if (!req.session.user) {
@@ -611,11 +622,19 @@ app.put('/api/users/:userId/subscription', async (req, res) => {
 
     try {
         // Check if user exists
-        const userDetail = await UserDetail.findById(userId);
-        if (!userDetail) {
+        const user = await User.findById(userId);
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: 'User not found'
+            });
+        }
+
+        const userDetail = await UserDetail.findOne({ email: user.email });
+        if (!userDetail) {
+            return res.status(404).json({
+                success: false,
+                message: 'User detail not found'
             });
         }
 
