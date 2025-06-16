@@ -78,14 +78,17 @@ function ProfilePage() {
         });
     });
 
-    const mostWatchedGenre = Object.keys(genreData).reduce((a, b) => 
-        genreData[a] > genreData[b] ? a : b, "None");
-
     // Convert genreData object to array of objects for chart
     const genreChartData = Object.entries(genreData).map(([genre, count]) => ({
         genre,
         count
-    })).slice(0,5);
+    }));
+
+    genreChartData.sort((a, b) => b.count - a.count);
+
+    const topGenreData = genreChartData.slice(0,5)
+    
+    const mostWatchedGenre = genreChartData.length > 0 ? genreChartData[0].genre : "None";
 
     return (
         <div className="bg-[#0B0B1E] text-white min-h-screen flex flex-col">
@@ -151,7 +154,7 @@ function ProfilePage() {
                         <div className="bg-[#1E1E2A] p-4 rounded-lg">
                             <h4 className="mb-2 font-semibold">Movie Analytics</h4>
                             {/* Pass genreChartData instead of Object.entries(genreData) */}
-                            <MovieAnalyticsChart data={genreChartData} />
+                            <MovieAnalyticsChart data={topGenreData} />
                             <p className="text-sm text-gray-400 mt-2">Most Watched Genre: {mostWatchedGenre}</p>
                         </div>
                     </div>
