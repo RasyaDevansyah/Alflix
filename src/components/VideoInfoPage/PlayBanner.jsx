@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function PlayBanner({ poster, isloggedIn}) {
+function PlayBanner({ poster, isloggedIn, id}) {
   const navigate = useNavigate();
 
   return (
@@ -14,7 +14,7 @@ function PlayBanner({ poster, isloggedIn}) {
         <button
           onClick={() => {
             if (isloggedIn) {
-              navigate('/VideoPlayBack');
+              navigate('/VideoPlayBack/' + id);
             } else {
               navigate('/SignIn');
             }

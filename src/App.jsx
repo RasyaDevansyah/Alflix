@@ -30,7 +30,7 @@ function App() {
         <Route path="/BrowsePage" element={<BrowsePage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/category/:category" element={<CategoryPage />} />
-        <Route path="/VideoPlayBack" element={<VideoPlayBack />} />
+        <Route path="/VideoPlayBack/:id" element={<VideoPlayBack />} />
         <Route path="/payment-success" element={<PaymentSuccessPage />} />
         <Route path="/Profile" element={<ProfilePage />} />
 

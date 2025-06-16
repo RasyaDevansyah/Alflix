@@ -1,7 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import Navbar from "../components/HomePage/Navbar";
 import beautyVideo from "/src/assets/Video/BeautyAndTheBeast.mp4";
 import { FaPlay, FaPause, FaVolumeUp, FaExpand, FaClosedCaptioning, FaCog } from "react-icons/fa";
+import { useAuth } from "../components/Context/AuthContext";
+import { useParams } from "react-router-dom";
 
 function VideoPlayBack() {
   const videoRef = useRef(null);
@@ -10,6 +12,81 @@ function VideoPlayBack() {
   const [volume, setVolume] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [activeTime, setLastActiveTime] = useState(null)
+  const { user } = useAuth();
+  const { id } = useParams();
+  const startTimeRef = useRef(null); // Using a ref instead of state
+
+  useEffect(() => {
+    // Set start time when component mounts
+    startTimeRef.current = new Date();
+    setLastActiveTime(new Date());
+
+    // Update last active time periodically
+    const activityInterval = setInterval(() => {
+      setLastActiveTime(new Date());
+    }, 5000);
+
+    return () => {
+      clearInterval(activityInterval);
+      sendViewingData();
+    };
+  }, []);
+
+  const sendViewingData = async () => {
+    try {
+      
+      
+      const endTime = new Date();
+      if (!startTimeRef.current) return; // Using the ref
+      
+      
+      const viewingDurationSeconds = Math.floor((endTime - startTimeRef.current) / 1000);
+      console.log(viewingDurationSeconds)
+      
+      if (viewingDurationSeconds > 3 && user && id) {
+        const response = await fetch(
+          `/api/users/${user.id}/activity`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              movieId: id,
+              duration: viewingDurationSeconds,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          console.error("Failed to send viewing data");
+        }
+      }
+    } catch (error) {
+      console.error("Error sending viewing data:", error);
+    }
+  };
+
+    // Track play/pause to calculate actual viewing time
+  useEffect(() => {
+    if (isPlaying) {
+      // Video is playing - start counting
+      setLastActiveTime(new Date());
+    }
+  }, [isPlaying]);
+
+  // Add beforeunload event listener to send data when page is refreshed/closed
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sendViewingData();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [user, id]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -85,9 +162,7 @@ function VideoPlayBack() {
             Your browser does not support the video tag.
           </video>
 
-          
           <div className="absolute bottom-0 left-0 right-0 z-20">
-           
             <input
               type="range"
               min="0"
@@ -102,9 +177,7 @@ function VideoPlayBack() {
               }}
             />
 
-            
             <div className="px-4 py-2 bg-black bg-opacity-60 flex justify-between items-center text-sm">
-             
               <div className="flex items-center gap-4">
                 <button onClick={togglePlay}>
                   {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} />}
@@ -124,7 +197,6 @@ function VideoPlayBack() {
                 </span>
               </div>
 
-              
               <div className="flex items-center gap-4">
                 <span>1080p</span>
                 <button className="bg-white text-black px-1 rounded text-xs font-bold">

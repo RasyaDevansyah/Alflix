@@ -10,7 +10,6 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-
 dotenv.config();
 
 const app = express();
@@ -312,9 +311,6 @@ app.get('/api/users/:userId/details', async (req, res) => {
 app.put('/api/users/:userId/favorites', async (req, res) => {
     const { userId } = req.params;
     const { movieId, action } = req.body;
-    console.log(userId)
-    console.log(movieId)
-    console.log(action)
     // If no body or no movieId/action, just return all favorites
     if (!movieId || !action) {
         // Validate userId
@@ -480,7 +476,9 @@ app.put('/api/users/:userId/favorites', async (req, res) => {
 
 app.put('/api/users/:userId/activity', async (req, res) => {
     const { userId } = req.params;
-    const { movieId, duration, tags } = req.body;
+    const { movieId, duration } = req.body;
+
+    console.log("activitiy duration = " + duration )
 
     // Validate inputs
     if (!mongoose.Types.ObjectId.isValid(userId)) {

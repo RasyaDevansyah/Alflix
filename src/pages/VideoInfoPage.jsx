@@ -40,7 +40,6 @@ function VideoInfoPage() {
       if (!response.ok) throw new Error('Failed to fetch favorites');
       
       const data = await response.json();
-      console.log(data)
       if (data.success) {
         const isFav = data.data.favorites.some(fav => String(fav.movieId) === String(id));
         setIsFavorite(isFav);
@@ -52,7 +51,6 @@ function VideoInfoPage() {
 
   const handleToggleFavorite = async () => {
     if (!user) return; // Don't proceed if not logged in
-    console.log(user)
     setFavoriteLoading(true);
     try {
       const action = isFavorite ? "remove" : "add";
@@ -174,7 +172,7 @@ function VideoInfoPage() {
   return (
     <div className="min-h-screen bg-[#1e1e2a] text-white font-libre-franklin">
       <Navbar />
-      <PlayBanner poster={movieData.imgSubheader} isloggedIn={user !== null}/>
+      <PlayBanner poster={movieData.imgSubheader} isloggedIn={user !== null} id={id}/>
       <VideoTitleInfo
         {...movieData}
         isFavorite={isFavorite}
