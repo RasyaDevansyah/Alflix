@@ -312,6 +312,55 @@ app.get('/api/users/:userId/details', async (req, res) => {
 app.put('/api/users/:userId/favorites', async (req, res) => {
     const { userId } = req.params;
     const { movieId, action } = req.body;
+    console.log(userId)
+    console.log(movieId)
+    console.log(action)
+    // If no body or no movieId/action, just return all favorites
+    if (!movieId || !action) {
+        // Validate userId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid user ID'
+            });
+        }
+
+        // Find user in User collection
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Find corresponding UserDetail using email
+        const userDetail = await UserDetail.findOne({ email: user.email });
+        if (!userDetail) {
+            return res.status(404).json({
+                success: false,
+                message: 'User details not found'
+            });
+        }
+
+        // Populate favorites with movie details before sending response
+        const populatedFavorites = await UserDetail.populate(userDetail, {
+            path: 'favorites.movieId',
+            select: 'title poster'
+        });
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                favorites: populatedFavorites.favorites.map(fav => ({
+                    movieId: fav.movieId._id,
+                    title: fav.movieId.title,
+                    poster: fav.movieId.poster,
+                    tags: fav.movieTags
+                }))
+            }
+        });
+    }
 
     // Validate inputs
     if (!mongoose.Types.ObjectId.isValid(userId)) {

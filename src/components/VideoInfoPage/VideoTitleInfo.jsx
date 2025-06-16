@@ -1,4 +1,5 @@
 export default function VideoTitleInfo({
+  isloggedIn,
   image,
   title,
   year,
@@ -7,6 +8,7 @@ export default function VideoTitleInfo({
   isFavorite,
   onToggleFavorite
 }) {
+
   return (
     <div className="flex flex-col lg:flex-row gap-8 py-8 px-6 md:px-12 lg:px-24">
       {/* Poster */}
@@ -20,14 +22,16 @@ export default function VideoTitleInfo({
       <div className="w-full lg:w-1/2 flex flex-col justify-between">
         <div>
           <div className="flex items-start justify-between">
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 tracking-[0.15em] leading-[1.2]">{title}</h1>
-            <button
-              onClick={onToggleFavorite}
-              className="text-red-500 text-3xl md:text-4xl hover:scale-110 transition"
-              title={isFavorite ? "Unfavorite" : "Add to favorites"}
-            >
-              {isFavorite ? "❤️" : "🤍"}
-            </button>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 tracking-[0.15em] line-clamp-4">{title}</h1>
+            {isloggedIn && (
+              <button
+                onClick={onToggleFavorite}
+                className="text-red-500 text-3xl md:text-4xl hover:scale-110 transition"
+                title={isFavorite ? "Unfavorite" : "Add to favorites"}
+              >
+                {isFavorite ? "❤️" : "🤍"}
+              </button>
+            )}
           </div>
 
           <h4 className="text-lg md:text-xl font-bold tracking-[0.15em] mb-4">

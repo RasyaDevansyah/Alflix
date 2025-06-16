@@ -7,6 +7,7 @@ import DescriptionSection from "../components/VideoInfoPage/DescriptionSection";
 import CastSection from "../components/VideoInfoPage/CastSection";
 import RelatedMovies from "../components/VideoInfoPage/RelatedMovies";
 import Footer from "../components/Footer";
+import { useAuth } from "../components/Context/AuthContext";
 
 function VideoInfoPage() {
   const { id } = useParams();
@@ -16,9 +17,70 @@ function VideoInfoPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
 
-  const handleToggleFavorite = () => {
-    setIsFavorite(prev => !prev);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    // Check if movie is in favorites when user or movie changes
+    if (user && movieData) {
+      checkIfFavorite();
+    }
+  }, [user, movieData]);
+
+  const checkIfFavorite = async () => {
+    try {
+      const response = await fetch(`/api/users/${user.id}/favorites`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch favorites');
+      
+      const data = await response.json();
+      console.log(data)
+      if (data.success) {
+        const isFav = data.data.favorites.some(fav => String(fav.movieId) === String(id));
+        setIsFavorite(isFav);
+      }
+    } catch (err) {
+      console.error("Error checking favorites:", err);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!user) return; // Don't proceed if not logged in
+    console.log(user)
+    setFavoriteLoading(true);
+    try {
+      const action = isFavorite ? "remove" : "add";
+      const response = await fetch(`/api/users/${user.id}/favorites`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          movieId: id,
+          action: action
+        })
+      });
+
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      const data = await response.json();
+      if (data.success) {
+        setIsFavorite(!isFavorite);
+      } else {
+        throw new Error(data.message || "Failed to update favorites");
+      }
+    } catch (err) {
+      console.error("Error updating favorites:", err);
+      // Optionally show error to user
+    } finally {
+      setFavoriteLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -40,7 +102,7 @@ function VideoInfoPage() {
             quote: data.data.quote,
             image: data.data.imgHeader,
             imgSubheader: data.data.imgSubheader,
-            tags: data.data.tags // Keep the tags for related movies
+            tags: data.data.tags
           };
 
           const transformedCast = data.data.cast.map(cast => ({
@@ -52,7 +114,6 @@ function VideoInfoPage() {
           setMovieData(transformedMovieData);
           setCastMembers(transformedCast);
 
-          // If we have tags, fetch related movies
           if (data.data.tags && data.data.tags.length > 0) {
             fetchRelatedMovies(data.data.tags);
           } else {
@@ -71,15 +132,12 @@ function VideoInfoPage() {
 
     const fetchRelatedMovies = async (tags) => {
       try {
-        // Create tag weights object (all weights equal to 1 initially)
         const tagWeights = {};
         tags.forEach(tag => {
           tagWeights[tag.id] = 1;
         });
 
-        // Create comma-separated list of tag IDs
         const tagIds = tags.map(tag => tag.id).join(',');
-
         const response = await fetch(`/api/movies?tagId=${tagIds}`, {
           method: 'POST',
           headers: {
@@ -94,9 +152,7 @@ function VideoInfoPage() {
 
         const data = await response.json();
         
-        
         if (data.success && Array.isArray(data.data)) {
-          // Filter out the current movie from related movies
           const filtered = data.data.filter(movie => String(movie._id) !== String(id));
           setRelatedMovies(filtered.slice(0, 5));
         } else {
@@ -122,6 +178,8 @@ function VideoInfoPage() {
       <VideoTitleInfo
         {...movieData}
         isFavorite={isFavorite}
+        isloggedIn={user !== null}
+        isLoading={favoriteLoading}
         onToggleFavorite={handleToggleFavorite}
       />
       <DescriptionSection description={movieData.description} quote={movieData.quote} />

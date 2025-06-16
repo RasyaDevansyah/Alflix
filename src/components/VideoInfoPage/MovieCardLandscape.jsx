@@ -1,13 +1,22 @@
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function MovieCardLandscape({ imageSrc, movieTitle , id}) {
-    const handleLinkClick = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+function MovieCardLandscape({ imageSrc, movieTitle, id }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        // First navigate to the same route to trigger a remount
+        navigate(`/VideoInfoPage/${id}`, { replace: true });
+        
+        // Then force a reload of the page
+        navigate(0); // This re-renders the current route
     };
 
     return (
-        <div className="flex flex-col relative flex-shrink-0 w-72 sm:w-80 group cursor-pointer transition-transform hover:scale-105">
-            
+        <div 
+            className="flex flex-col relative flex-shrink-0 w-72 sm:w-80 group cursor-pointer transition-transform hover:scale-105"
+            onClick={handleClick}
+        >
             {/* Image Card */}
             <div className="w-full h-40 sm:h-48 rounded-lg overflow-hidden shadow-[0_0_10px_1px_rgba(255,255,255,0.15)]">
                 <img 
@@ -23,13 +32,9 @@ function MovieCardLandscape({ imageSrc, movieTitle , id}) {
             </p>
 
             {/* Watch Label */}
-            <Link 
-                to={`/VideoInfoPage/${id}`}
-                className="text-sm sm:text-base text-[#B8B1FF] tracking-[0.15em] group-hover:underline"
-                onClick={handleLinkClick}
-            >
+            <div className="text-sm sm:text-base text-[#B8B1FF] tracking-[0.15em] group-hover:underline">
                 watch &gt;
-            </Link>
+            </div>
         </div>
     );
 }
