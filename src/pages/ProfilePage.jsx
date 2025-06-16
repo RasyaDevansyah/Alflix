@@ -4,8 +4,7 @@ import WatchHoursChart from "../components/WatchHoursChart";
 import MovieAnalyticsChart from "../components/MovieAnalyticsChart";
 import { FaSignOutAlt } from "react-icons/fa";
 
-import profile from '/src/assets/profile-pic.png';
-import profilebanner from '/src/assets/profile-banner.png';
+import { FaBell, FaUser } from "react-icons/fa";
 
 import phoneIcon from '/src/assets/Phone.png';
 import computerIcon from '/src/assets/Computer.png';
@@ -50,12 +49,10 @@ function ProfilePage() {
     };
 
     const recentWatches = userDetails?.history?.map(item => ({
+        id: item.movieId._id,
         title: item.movieId.title,
         image: item.movieId.imgHeader,
-        timestamp: item.timestamp,
-        movieId: item.movieId._id,
-        season: item.season,
-        episode: item.episode
+        timestamp: item.timestamp
     })) || [];
 
     recentWatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -91,32 +88,35 @@ function ProfilePage() {
             <Navbar />
 
             <div className="flex-1 px-8 py-12">
-                <div
-                    className="relative bg-cover bg-center h-[200px] rounded-xl overflow-hidden mb-16"
-                    style={{ backgroundImage: `url(${profilebanner})` }}
-                >
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center px-10">
-                        <div className="flex items-center w-full">
-                            <img src={profile} alt="Profile" className="w-24 h-24 rounded-full border-4 border-white" />
-                            <div className="ml-6 flex-1">
-                                <p className="text-gray-300 text-lg">Profile of</p>
-                                <h2 className="text-3xl font-bold">{userDetails?.username || user?.username || 'username'}</h2>
-                                <p className="text-sm mt-1">{watched} watched</p>
-                                {userDetails?.subId && (
-                                    <p className="text-sm mt-1">Subscription: {userDetails.subId.title}</p>
-                                )}
-                            </div>
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center gap-2 bg-[#6358D3] hover:bg-[#8883bb] text-white px-4 py-2 rounded-lg transition-colors"
-                            >
-                                <FaSignOutAlt />
-                                Logout
-                            </button>
+
+                {/* ✅ New Clean Profile Section */}
+                <div className="flex items-center justify-between bg-[#0B0B1E] p-6 rounded-xl shadow-md mb-10">
+                    <div className="flex items-center gap-5">
+                        <div className="bg-white rounded-full p-4">
+                        <FaUser className="text-[#0B0B1E] text-3xl" />
+                        </div>
+
+                        <div>
+                            <p className="text-white text-md">Profile of</p>
+                            <h2 className="text-2xl font-bold text-[#A78BFA] uppercase tracking-wide">
+                                {userDetails?.username || user?.username || 'Username'}
+                            </h2>
+                            <p className="text-sm text-gray-400">{watched} watched</p>
+                            {userDetails?.subId && (
+                                <p className="text-sm text-gray-400">Subscription: {userDetails.subId.title}</p>
+                            )}
                         </div>
                     </div>
+                    <button
+                        onClick={handleLogout}
+                        className="bg-[#6358D3] hover:bg-[#8883bb] text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                    >
+                        <FaSignOutAlt />
+                        Logout
+                    </button>
                 </div>
 
+                {/* Recent Watch and Favorites */}
                 <div className="grid grid-cols-2 gap-10 mb-16">
                     <div>
                         <h3 className="text-2xl font-bold mb-4">Recent Watch</h3>
@@ -137,6 +137,7 @@ function ProfilePage() {
                     </div>
                 </div>
 
+                {/* Watch Analytics */}
                 <div className="mb-16">
                     <h3 className="text-2xl font-bold mb-6">Personal Overview</h3>
                     <div className="grid grid-cols-2 gap-8">
@@ -155,6 +156,7 @@ function ProfilePage() {
                     </div>
                 </div>
 
+                {/* Device Compatibility */}
                 <div className="bg-black bg-opacity-40 p-6 rounded-lg mb-10 text-center">
                     <h4 className="text-xl font-bold mb-4">Compatible Device</h4>
                     <div className="flex justify-center gap-12 text-gray-300">
@@ -178,26 +180,26 @@ function ProfilePage() {
     );
 }
 
-function WatchItem({ title, season, episode, image, timestamp, movieId }) {
+function WatchItem({ id, title, season, episode, image, timestamp }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/VideoInfoPage/${movieId}`);
+        navigate(`/VideoInfoPage/${id}`);
     };
 
     return (
         <div
-            className="flex items-center bg-[#1E1E2A] p-3 rounded-lg cursor-pointer transition-transform hover:scale-105"
+            className="flex items-center bg-[#1E1E2A] p-3 rounded-lg cursor-pointer hover:scale-105 transition-transform"
             onClick={handleClick}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && handleClick()}
         >
             <img src={image} alt={title} className="w-[100px] h-[60px] object-cover rounded mr-4" />
             <div>
                 <p className="font-semibold">{title}</p>
                 <p className="text-sm text-gray-400">
-                    {season && `${season} · `}{episode && `${episode} · `}Watched on {new Date(timestamp).toLocaleDateString()}
+                    {season && `${season} · `}{episode && `${episode} · `}
+                    Watched on {new Date(timestamp).toLocaleDateString()}
                 </p>
             </div>
         </div>
