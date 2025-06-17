@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const SearchResult = ({ result }) => {
   return (
-    <div className='fixed top-30 left-1/2 md:left-[80%] z-20 w-11/12 md:w-1/6 bg-transparent flex flex-col shadow-lg rounded-lg mt-4 max-h-[300px] overflow-y-auto scrollbar-thumb-rounded scrollbar-thumb-gray-500 scrollbar-track-slate-600 transform -translate-x-1/2 md:translate-x-0'>
+    <div className='fixed top-30 left-1/2 md:left-[80%] z-20 w-11/12 md:w-1/6 bg-transparent flex flex-col shadow-lg rounded-lg mt-4 max-h-[300px] overflow-y-auto custom-scrollbar transform -translate-x-1/2 md:translate-x-0'>
       {result.length === 0 ? (
         <p className="text-center bg-gray-800/30 rounded-2xl py-4">No results found.</p>
       ) : (

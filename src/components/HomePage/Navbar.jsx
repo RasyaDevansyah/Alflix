@@ -54,7 +54,6 @@ function Navbar() {
                 <div className="hidden lg:flex items-center gap-3">
                     {isUserInSession ? (
                         <>
-                            <FaBell color="#DEDCFA" className="h-5 w-auto" />
                             <Link to="/Profile" className="flex items-center gap-2">
                                 <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
                                     <FaUser color="#1E1E2A" className="h-4 w-auto" />
@@ -73,7 +72,7 @@ function Navbar() {
                 </div>
 
                 {/* Mobile View - Burger Icon */}
-                <div className="lg:hidden">
+                <div className="lg:hidden z-60">
                     <button onClick={toggleMenu}>
                         <FaBars className="text-white h-6 w-6" />
                     </button>
@@ -84,7 +83,7 @@ function Navbar() {
             {isOpen && (
                 <>
                     {/* Sidebar */}
-                    <div className="fixed top-0 left-0 h-full w-2/3 sm:w-1/2 md:w-1/3 bg-[#1e1e2acc] backdrop-blur-sm z-40 p-5 shadow-lg">
+                    <div className="fixed top-0 left-0 h-full w-2/3 sm:w-1/2 md:w-1/3 bg-[#1e1e2acc] backdrop-blur-sm z-60 p-5 shadow-lg">
                         <div className="flex justify-between items-center mb-6">
                             <AlflixLogo type="2" className="w-20 h-auto" />
                             <button onClick={toggleMenu}>
@@ -119,7 +118,6 @@ function Navbar() {
 
                             {isUserInSession ? (
                                 <div className="flex items-center gap-3">
-                                    <FaBell color="#DEDCFA" className="h-5 w-auto" />
                                     <Link to="/Profile" onClick={toggleMenu} className="flex items-center gap-2">
                                         <div className="w-7 h-7 bg-white flex items-center justify-center rounded-lg">
                                             <FaUser color="#1E1E2A" className="h-4 w-auto" />
