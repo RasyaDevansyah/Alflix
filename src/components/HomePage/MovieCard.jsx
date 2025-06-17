@@ -24,7 +24,6 @@ const MovieCard = ({ movieTitle, imgSource, number, id }) => {
                     className="w-full mt-3 sm:mt-4 text-left px-1"
                     onClick={handleClick}
                     role='button'
-                    tabIndex={0}
                 >
                     {/* Poster Image */}
                     <div className="w-auto h-45 sm:h-65 md:h-75 lg:h-85 overflow-hidden rounded-lg shadow-lg shadow-[#FFFFFF33]">

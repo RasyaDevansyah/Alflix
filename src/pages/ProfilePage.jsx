@@ -9,7 +9,7 @@ import computerIcon from '/src/assets/Computer.png';
 
 import { useAuth } from "../components/Context/AuthContext";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ProfilePage() {
     const navigate = useNavigate();
@@ -56,6 +56,7 @@ function ProfilePage() {
     recentWatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     const favorites = userDetails?.favorites?.map(item => ({
+        id: item.movieId._id,
         title: item.movieId.title,
         image: item.movieId.imgHeader
     })) || [];
@@ -114,7 +115,26 @@ function ProfilePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                     <div>
-                        <h3 className="text-xl sm:text-2xl font-bold mb-4">Recent Watch</h3>
+                        <div className="hidden lg:flex lg:flex-wrap lg:gap-2 lg:justify-evenly lg:items-center lg:mb-4 ">
+                            <h3 className="text-xl sm:text-2xl font-bold mb-4">Recent Watch</h3>
+                            <hr className="flex-grow mx-4 hidden md:block border-t border-gray-600" />
+                            <Link
+                                to="/History"
+                                className="px-3 sm:px-4 py-1 sm:py-2 bg-gray-500 text-white rounded-lg hover:bg-violet-600 transition-colors text-sm sm:text-base h-9 sm:h-10 flex items-center"
+                            >
+                                View All
+                            </Link>
+                        </div>
+                        <div className="lg:hidden flex flex-wrap gap-2 justify-evenly items-center mb-4 ">
+                            <h3 className="text-xl sm:text-2xl font-bold mb-4">Recent Watch</h3>
+                            <hr className="flex-grow mx-4 md:block border-t border-gray-600" />
+                            <Link
+                                to="/History"
+                                className="px-3 sm:px-4 py-1 sm:py-2 bg-gray-500 text-white rounded-lg hover:bg-violet-600 transition-colors text-sm sm:text-base h-9 sm:h-10 flex items-center"
+                            >
+                                View All
+                            </Link>
+                        </div>
                         <div className="space-y-4">
                             {recentWatches.slice(0, 4).map((item, index) => (
                                 <WatchItem key={index} {...item} />
@@ -124,7 +144,8 @@ function ProfilePage() {
 
                     <div>
                         <h3 className="text-xl sm:text-2xl font-bold mb-4">Favorites</h3>
-                        <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
+                        <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar scrollbar-vertical"
+                             style={{ overflowX: 'hidden' }}>
                             {favorites.map((item, index) => (
                                 <FavoriteItem key={index} {...item} />
                             ))}
@@ -199,9 +220,18 @@ function WatchItem({ id, title, season, episode, image, timestamp }) {
     );
 }
 
-function FavoriteItem({ title, image }) {
+function FavoriteItem({ title, image, id }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/VideoInfoPage/${id}`);
+    };
+
     return (
-        <div className="relative">
+        <div
+        className="relative cursor-pointer hover:scale-105 transition-transform"
+        onClick={handleClick}
+        role="button">
             <img src={image} alt={title} className="w-full h-[185px] object-cover rounded-lg" />
             <p className="absolute bottom-2 left-2 text-xs sm:text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{title}</p>
         </div>
