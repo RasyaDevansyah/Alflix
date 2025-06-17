@@ -1,7 +1,5 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
@@ -30,13 +28,6 @@ Currently, two official plugins are available:
 ```bash
   npm install
 ```
-### Running the Development Server
-To start the development server with hot module replacement (HMR), run:
-```bash
-npm run dev
-```
-
-This will start the Vite development server, and you can view your application by opening http://localhost:5173 in your browser.
 
 ### Building for Production
 To build the project for production, run:
@@ -45,11 +36,10 @@ npm run build
 ```
 This will create an optimized production build in the dist directory.
 
-### Previewing the Production Build
-To preview the production build locally, run:
+### Starting the Production Build
+To start the production build locally, run:
 ```bash
-npm run preview
+npm run start
 ```
 This will serve the production build locally, typically at http://localhost:4173.
 
-Test
