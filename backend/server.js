@@ -27,8 +27,9 @@ app.use(session({
         collectionName: 'sessions'
     }),
     cookie: {
-      secure: true, // if true: only transmit cookie over https
-      httpOnly: true, // prevents client-side JS from reading the cookie
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     }
 }));
 
