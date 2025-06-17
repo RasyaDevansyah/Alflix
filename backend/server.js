@@ -22,7 +22,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // if true: only transmit cookie over https
+      secure: true, // if true: only transmit cookie over https
       httpOnly: true, // prevents client-side JS from reading the cookie
     }
 }));
