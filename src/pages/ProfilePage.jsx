@@ -2,9 +2,7 @@ import Navbar from "../components/HomePage/Navbar";
 import Footer from "../components/Footer";
 import WatchHoursChart from "../components/WatchHoursChart";
 import MovieAnalyticsChart from "../components/MovieAnalyticsChart";
-import { FaSignOutAlt } from "react-icons/fa";
-
-import { FaBell, FaUser } from "react-icons/fa";
+import { FaSignOutAlt, FaBell, FaUser } from "react-icons/fa";
 
 import phoneIcon from '/src/assets/Phone.png';
 import computerIcon from '/src/assets/Computer.png';
@@ -87,18 +85,17 @@ function ProfilePage() {
         <div className="bg-[#0B0B1E] text-white min-h-screen flex flex-col">
             <Navbar />
 
-            <div className="flex-1 px-8 py-12">
+            <div className="flex-1 px-4 sm:px-6 md:px-8 py-8 sm:py-12">
 
-                {/* ✅ New Clean Profile Section */}
-                <div className="flex items-center justify-between bg-[#0B0B1E] p-6 rounded-xl shadow-md mb-10">
+                <div className="flex flex-col sm:flex-row items-center sm:justify-between bg-[#0B0B1E] p-6 rounded-xl shadow-md mb-10">
                     <div className="flex items-center gap-5">
                         <div className="bg-white rounded-full p-4">
-                        <FaUser className="text-[#0B0B1E] text-3xl" />
+                            <FaUser className="text-[#0B0B1E] text-3xl" />
                         </div>
 
                         <div>
-                            <p className="text-white text-md">Profile of</p>
-                            <h2 className="text-2xl font-bold text-[#A78BFA] uppercase tracking-wide">
+                            <p className="text-white text-sm">Profile of</p>
+                            <h2 className="text-xl sm:text-2xl font-bold text-[#A78BFA] uppercase tracking-wide">
                                 {userDetails?.username || user?.username || 'Username'}
                             </h2>
                             <p className="text-sm text-gray-400">{watched} watched</p>
@@ -109,17 +106,15 @@ function ProfilePage() {
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="bg-[#6358D3] hover:bg-[#8883bb] text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                        className="mt-4 sm:mt-0 bg-[#6358D3] hover:bg-[#8883bb] text-white px-4 py-2 rounded-lg flex items-center gap-2"
                     >
-                        <FaSignOutAlt />
-                        Logout
+                        <FaSignOutAlt /> Logout
                     </button>
                 </div>
 
-                {/* Recent Watch and Favorites */}
-                <div className="grid grid-cols-2 gap-10 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                     <div>
-                        <h3 className="text-2xl font-bold mb-4">Recent Watch</h3>
+                        <h3 className="text-xl sm:text-2xl font-bold mb-4">Recent Watch</h3>
                         <div className="space-y-4">
                             {recentWatches.slice(0, 4).map((item, index) => (
                                 <WatchItem key={index} {...item} />
@@ -128,7 +123,7 @@ function ProfilePage() {
                     </div>
 
                     <div>
-                        <h3 className="text-2xl font-bold mb-4">Favorites</h3>
+                        <h3 className="text-xl sm:text-2xl font-bold mb-4">Favorites</h3>
                         <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
                             {favorites.map((item, index) => (
                                 <FavoriteItem key={index} {...item} />
@@ -137,10 +132,9 @@ function ProfilePage() {
                     </div>
                 </div>
 
-                {/* Watch Analytics */}
                 <div className="mb-16">
-                    <h3 className="text-2xl font-bold mb-6">Personal Overview</h3>
-                    <div className="grid grid-cols-2 gap-8">
+                    <h3 className="text-xl sm:text-2xl font-bold mb-6">Personal Overview</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="bg-[#1E1E2A] p-4 rounded-lg">
                             <h4 className="mb-2 font-semibold">Watch Hours</h4>
                             <WatchHoursChart data={watchHoursData} />
@@ -156,10 +150,9 @@ function ProfilePage() {
                     </div>
                 </div>
 
-                {/* Device Compatibility */}
                 <div className="bg-black bg-opacity-40 p-6 rounded-lg mb-10 text-center">
                     <h4 className="text-xl font-bold mb-4">Compatible Device</h4>
-                    <div className="flex justify-center gap-12 text-gray-300">
+                    <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 text-gray-300">
                         <div className="flex flex-col items-center">
                             <img src={computerIcon} alt="Computer Icon" className="w-12 h-12 mb-2" />
                             <p className="font-semibold text-white">Computer</p>
@@ -194,10 +187,10 @@ function WatchItem({ id, title, season, episode, image, timestamp }) {
             role="button"
             tabIndex={0}
         >
-            <img src={image} alt={title} className="w-[100px] h-[60px] object-cover rounded mr-4" />
+            <img src={image} alt={title} className="w-[100px] h-[60px] md:w-[120px] md:h-[70px] object-cover rounded mr-4" />
             <div>
-                <p className="font-semibold">{title}</p>
-                <p className="text-sm text-gray-400">
+                <p className="font-semibold text-sm sm:text-base">{title}</p>
+                <p className="text-xs text-gray-400">
                     {season && `${season} · `}{episode && `${episode} · `}
                     Watched on {new Date(timestamp).toLocaleDateString()}
                 </p>
@@ -210,7 +203,7 @@ function FavoriteItem({ title, image }) {
     return (
         <div className="relative">
             <img src={image} alt={title} className="w-full h-[185px] object-cover rounded-lg" />
-            <p className="absolute bottom-2 left-2 text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{title}</p>
+            <p className="absolute bottom-2 left-2 text-xs sm:text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{title}</p>
         </div>
     );
 }
