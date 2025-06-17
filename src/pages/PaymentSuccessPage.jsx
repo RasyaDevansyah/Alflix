@@ -13,7 +13,7 @@ const PaymentSuccessPage = () => {
       <div className="flex flex-1 justify-center items-center px-4 py-10"> 
         <div className="text-center max-w-md">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">
-            Your Payment was <br /> 
+            Your Payment was Successful! <br />
           </h1>
           <p className="text-gray-400 text-sm sm:text-base mb-6">
             Enjoy our services!

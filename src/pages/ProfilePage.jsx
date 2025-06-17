@@ -2,17 +2,14 @@ import Navbar from "../components/HomePage/Navbar";
 import Footer from "../components/Footer";
 import WatchHoursChart from "../components/WatchHoursChart";
 import MovieAnalyticsChart from "../components/MovieAnalyticsChart";
-import { FaSignOutAlt } from "react-icons/fa";
-
-import profile from '/src/assets/profile-pic.png';
-import profilebanner from '/src/assets/profile-banner.png';
+import { FaSignOutAlt, FaBell, FaUser } from "react-icons/fa";
 
 import phoneIcon from '/src/assets/Phone.png';
 import computerIcon from '/src/assets/Computer.png';
+
 import { useAuth } from "../components/Context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 function ProfilePage() {
     const navigate = useNavigate();
@@ -49,8 +46,8 @@ function ProfilePage() {
         }
     };
 
-    // Prepare recent watches from history
     const recentWatches = userDetails?.history?.map(item => ({
+        id: item.movieId._id,
         title: item.movieId.title,
         image: item.movieId.imgHeader,
         timestamp: item.timestamp
@@ -58,21 +55,16 @@ function ProfilePage() {
 
     recentWatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-
-    console.log(userDetails)
     const favorites = userDetails?.favorites?.map(item => ({
         title: item.movieId.title,
         image: item.movieId.imgHeader
     })) || [];
 
-
-    // Calculate watch hours for the chart
     const watchHoursData = userDetails?.watchHours?.map(item => ({
         date: new Date(item.date).toLocaleDateString(),
-        hours: item.duration / 60 // Convert minutes to hours
+        hours: item.duration / 60
     })) || [];
 
-    // Calculate genre distribution for analytics
     const genreData = {};
     userDetails?.history?.forEach(item => {
         item.movieTags.forEach(tag => {
@@ -80,63 +72,60 @@ function ProfilePage() {
         });
     });
 
-    // Convert genreData object to array of objects for chart
     const genreChartData = Object.entries(genreData).map(([genre, count]) => ({
         genre,
         count
     }));
 
     genreChartData.sort((a, b) => b.count - a.count);
-
-    const topGenreData = genreChartData.slice(0,5)
-    
+    const topGenreData = genreChartData.slice(0, 5);
     const mostWatchedGenre = genreChartData.length > 0 ? genreChartData[0].genre : "None";
 
     return (
         <div className="bg-[#0B0B1E] text-white min-h-screen flex flex-col">
             <Navbar />
 
-            <div className="flex-1 px-8 py-12">
-                <div
-                    className="relative bg-cover bg-center h-[200px] rounded-xl overflow-hidden mb-16"
-                    style={{ backgroundImage: `url(${profilebanner})` }}
-                >
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center px-10">
-                        <div className="flex items-center w-full">
-                            <img src={profile} alt="Profile" className="w-24 h-24 rounded-full border-4 border-white" />
-                            <div className="ml-6 flex-1">
-                                <p className="text-gray-300 text-lg">Profile of</p>
-                                <h2 className="text-3xl font-bold">{userDetails?.username || user?.username || 'username'}</h2>
-                                <p className="text-sm mt-1">{watched} watched</p>
-                                {userDetails?.subId && (
-                                    <p className="text-sm mt-1">Subscription: {userDetails.subId.title}</p>
-                                )}
-                            </div>
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center gap-2 bg-[#6358D3] hover:bg-[#8883bb] text-white px-4 py-2 rounded-lg transition-colors"
-                            >
-                                <FaSignOutAlt />
-                                Logout
-                            </button>
+            <div className="flex-1 px-4 sm:px-6 md:px-8 py-8 sm:py-12">
+
+                <div className="flex flex-col sm:flex-row items-center sm:justify-between bg-[#0B0B1E] p-6 rounded-xl shadow-md mb-10">
+                    <div className="flex items-center gap-5">
+                        <div className="bg-white rounded-full p-4">
+                            <FaUser className="text-[#0B0B1E] text-3xl" />
+                        </div>
+
+                        <div>
+                            <p className="text-white text-sm">Profile of</p>
+                            <h2 className="text-xl sm:text-2xl font-bold text-[#A78BFA] uppercase tracking-wide">
+                                {userDetails?.username || user?.username || 'Username'}
+                            </h2>
+                            <p className="text-sm text-gray-400">{watched} watched</p>
+                            {userDetails?.subId && (
+                                <p className="text-sm text-gray-400">Subscription: {userDetails.subId.title}</p>
+                            )}
                         </div>
                     </div>
+                    <button
+                        onClick={handleLogout}
+                        className="mt-4 sm:mt-0 bg-[#6358D3] hover:bg-[#8883bb] text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                    >
+                        <FaSignOutAlt /> Logout
+                    </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-10 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                     <div>
-                        <h3 className="text-2xl font-bold mb-4">Recent Watch</h3>
+                        <h3 className="text-xl sm:text-2xl font-bold mb-4">Recent Watch</h3>
                         <div className="space-y-4">
-                            {recentWatches.slice(0,4).map((item, index) => (
+                            {recentWatches.slice(0, 4).map((item, index) => (
                                 <WatchItem key={index} {...item} />
                             ))}
                         </div>
                     </div>
 
                     <div>
-                        <h3 className="text-2xl font-bold mb-4">Favorites</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            {favorites.slice(0,4).map((item, index) => (
+                        <h3 className="text-xl sm:text-2xl font-bold mb-4">Favorites</h3>
+                        <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
+                            {favorites.map((item, index) => (
                                 <FavoriteItem key={index} {...item} />
                             ))}
                         </div>
@@ -144,8 +133,8 @@ function ProfilePage() {
                 </div>
 
                 <div className="mb-16">
-                    <h3 className="text-2xl font-bold mb-6">Personal Overview</h3>
-                    <div className="grid grid-cols-2 gap-8">
+                    <h3 className="text-xl sm:text-2xl font-bold mb-6">Personal Overview</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="bg-[#1E1E2A] p-4 rounded-lg">
                             <h4 className="mb-2 font-semibold">Watch Hours</h4>
                             <WatchHoursChart data={watchHoursData} />
@@ -155,7 +144,6 @@ function ProfilePage() {
                         </div>
                         <div className="bg-[#1E1E2A] p-4 rounded-lg">
                             <h4 className="mb-2 font-semibold">Movie Analytics</h4>
-                            {/* Pass genreChartData instead of Object.entries(genreData) */}
                             <MovieAnalyticsChart data={topGenreData} />
                             <p className="text-sm text-gray-400 mt-2">Most Watched Genre: {mostWatchedGenre}</p>
                         </div>
@@ -164,7 +152,7 @@ function ProfilePage() {
 
                 <div className="bg-black bg-opacity-40 p-6 rounded-lg mb-10 text-center">
                     <h4 className="text-xl font-bold mb-4">Compatible Device</h4>
-                    <div className="flex justify-center gap-12 text-gray-300">
+                    <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 text-gray-300">
                         <div className="flex flex-col items-center">
                             <img src={computerIcon} alt="Computer Icon" className="w-12 h-12 mb-2" />
                             <p className="font-semibold text-white">Computer</p>
@@ -185,13 +173,24 @@ function ProfilePage() {
     );
 }
 
-function WatchItem({ title, season, episode, image, timestamp }) {
+function WatchItem({ id, title, season, episode, image, timestamp }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/VideoInfoPage/${id}`);
+    };
+
     return (
-        <div className="flex items-center bg-[#1E1E2A] p-3 rounded-lg">
-            <img src={image} alt={title} className="w-[100px] h-[60px] object-cover rounded mr-4" />
+        <div
+            className="flex items-center bg-[#1E1E2A] p-3 rounded-lg cursor-pointer hover:scale-105 transition-transform"
+            onClick={handleClick}
+            role="button"
+            tabIndex={0}
+        >
+            <img src={image} alt={title} className="w-[100px] h-[60px] md:w-[120px] md:h-[70px] object-cover rounded mr-4" />
             <div>
-                <p className="font-semibold">{title}</p>
-                <p className="text-sm text-gray-400">
+                <p className="font-semibold text-sm sm:text-base">{title}</p>
+                <p className="text-xs text-gray-400">
                     {season && `${season} · `}{episode && `${episode} · `}
                     Watched on {new Date(timestamp).toLocaleDateString()}
                 </p>
@@ -204,7 +203,7 @@ function FavoriteItem({ title, image }) {
     return (
         <div className="relative">
             <img src={image} alt={title} className="w-full h-[185px] object-cover rounded-lg" />
-            <p className="absolute bottom-2 left-2 text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{title}</p>
+            <p className="absolute bottom-2 left-2 text-xs sm:text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{title}</p>
         </div>
     );
 }
