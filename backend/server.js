@@ -9,6 +9,7 @@ import UserDetail from './models/userdetail.model.js';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import MongoStore from 'connect-mongo';
 
 dotenv.config();
 
@@ -21,6 +22,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: 'sessions'
+    }),
     cookie: {
       secure: true, // if true: only transmit cookie over https
       httpOnly: true, // prevents client-side JS from reading the cookie
@@ -54,8 +59,6 @@ app.get('/api/subscriptions', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching subscriptions', error: error.message });
     }
 });
-
-
 
 
 app.get('/api/users/me', (req, res) => {
@@ -238,7 +241,7 @@ app.post('/api/users/login', async (req, res) => {
         if (rememberMe) {
             req.session.cookie.maxAge = 1 * 24 * 60 * 60 * 1000; // 1 day
         } else {
-            req.session.cookie.maxAge  =  60 * 1000; // 1 minute
+            req.session.cookie.maxAge  = 60 * 1000; // 1 minute
         }
         
         req.session.user = {
@@ -722,7 +725,6 @@ app.get('/api/movies/trending', async (req, res) => {
         });
     }
 });
-
 
 app.get('/api/tags', async (req, res) => {
     try {
