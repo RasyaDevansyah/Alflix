@@ -46,7 +46,7 @@ function MovieRow({ title, movies, viewAllLink }) {
                 <h3 className="text-lg sm:text-xl font-bold tracking-wider text-white">
                     {title}
                 </h3>
-                <hr className="flex-grow mx-4 hidden md:block border-t border-gray-600" />
+                <hr className="flex-grow mx-4 md:block border-t border-gray-600" />
                 <Link
                     to={viewAllLink}
                     className="px-3 sm:px-4 py-1 sm:py-2 bg-gray-500 text-white rounded-lg hover:bg-violet-600 transition-colors text-sm sm:text-base h-9 sm:h-10 flex items-center"
