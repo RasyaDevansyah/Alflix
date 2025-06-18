@@ -29,6 +29,12 @@ Currently, two official plugins are available:
   npm install
 ```
 
+4. Set Environment for mongoDB:
+```
+  MONGO_URI = (your mongo URI here)
+```
+
+
 ### Building for Production
 To build the project for production, run:
 ```bash
