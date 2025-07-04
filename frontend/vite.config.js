@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig(({ mode }) => {
 
   return {
+    root: __dirname,
     plugins: [react(), tailwindcss()],
     base: '/', // Changed from './' for Vercel compatibility
     server:
@@ -16,7 +17,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      outDir: 'dist',
+      outDir: '../dist',
       assetsDir: 'assets',
     }
   }
