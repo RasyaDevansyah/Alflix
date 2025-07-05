@@ -2,6 +2,20 @@
 
 A full-stack MERN streaming service platform built with React, Node.js, Express, MongoDB, and Tailwind CSS. Alflix provides a Netflix-like experience with user authentication, subscription management, video streaming, and an intuitive user interface.
 
+![image](https://github.com/user-attachments/assets/4ead91c9-b1c9-4140-91be-12bf4cdd367e)
+
+
+## 👥 Team
+
+1. Christian Setiawan - 2702221570
+2. Michelle Daphne Langitan - 2702221425
+3. Muhammad Rasya Devansyah - 2702223254
+4. Farrel Raynandi Putra - 2702234763
+5. Gregorius William Koswari - 2702240701
+
+This project was developed as a collaborative effort for Software Engineering coursework.
+
+
 ## ✨ Features
 
 ### 🎥 Video Streaming
@@ -190,17 +204,6 @@ This is a group assignment project. For contributions:
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
-
-
-## 👥 Team
-
-1. Christian Setiawan - 2702221570
-2. Michelle Daphne Langitan - 2702221425
-3. Muhammad Rasya Devansyah - 2702223254
-4. Farrel Raynandi Putra - 2702234763
-5. Gregorius William Koswari - 2702240701
-
-This project was developed as a collaborative effort for Software Engineering coursework.
 
 ---
 
