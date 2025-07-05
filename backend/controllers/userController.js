@@ -18,7 +18,11 @@ export const logout = (req, res) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Logout failed' });
         }
-        res.clearCookie('connect.sid');
+        res.clearCookie('connect.sid', {
+            httpOnly: true,
+            secure: false, // Match the session cookie settings
+            sameSite: 'lax'
+        });
         res.status(200).json({ success: true, message: 'Logged out successfully' });
     });
 };
@@ -164,23 +168,36 @@ export const login = async (req, res) => {
             });
         }
 
-        if (rememberMe) {
-            req.session.cookie.maxAge = 1 * 24 * 60 * 60 * 1000; // 1 day
-        } else {
-            req.session.cookie.maxAge = 60 * 1000; // 1 minute
-        }
-        
+        // Set session data
         req.session.user = {
             id: user._id,
             username: user.username,
             email: user.email
         };
 
-        res.status(200).json({
-            success: true,
-            data: {
-                user: req.session.user
+        // Set cookie maxAge based on rememberMe
+        if (rememberMe) {
+            req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+        } else {
+            req.session.cookie.maxAge = 24 * 60 * 60 * 1000; // 1 day
+        }
+
+        // Save session explicitly
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Error saving session'
+                });
             }
+
+            res.status(200).json({
+                success: true,
+                data: {
+                    user: req.session.user
+                }
+            });
         });
 
     } catch (error) {
