@@ -106,6 +106,174 @@ This project was developed as a collaborative effort for Software Engineering co
    - The application will automatically create collections on first run
    - You can use the `populateDB.js` script to add sample data
 
+## 🗄️ Database Import Instructions
+
+### Option 1: Using MongoDB Atlas (Recommended)
+
+#### Step 1: Set up MongoDB Atlas
+1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas) and create a free account
+2. Create a new cluster (M0 Free tier is sufficient)
+3. Set up database access with a username and password
+4. Configure network access (allow access from anywhere: `0.0.0.0/0`)
+5. Get your connection string from the "Connect" button
+
+#### Step 2: Install MongoDB Database Tools
+Download and install MongoDB Database Tools from [MongoDB Download Center](https://www.mongodb.com/try/download/database-tools)
+
+**Windows:**
+```bash
+# Download the zip file and extract to C:\Program Files\MongoDB\Tools\bin
+# Add to PATH: C:\Program Files\MongoDB\Tools\bin
+```
+
+**macOS:**
+```bash
+brew install mongodb/brew/mongodb-database-tools
+```
+
+**Linux (Ubuntu):**
+```bash
+wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-database-tools
+```
+
+#### Step 3: Import Sample Data
+
+1. **Navigate to the sample_database directory:**
+   ```bash
+   cd sample_database
+   ```
+
+2. **Import movies collection:**
+   ```bash
+   mongoimport --uri "your_mongodb_atlas_connection_string" --collection movies --file movies.json --jsonArray
+   ```
+
+3. **Import subscriptions collection:**
+   ```bash
+   mongoimport --uri "your_mongodb_atlas_connection_string" --collection subscriptions --file subscriptions.json --jsonArray
+   ```
+
+#### Step 4: Verify Import
+1. Go to MongoDB Atlas dashboard
+2. Click on "Browse Collections"
+3. You should see two collections: `movies` and `subscriptions`
+4. Check that the documents are imported correctly
+
+### Option 2: Using Local MongoDB
+
+#### Step 1: Install Local MongoDB
+Follow the [MongoDB Installation Guide](https://docs.mongodb.com/manual/installation/)
+
+#### Step 2: Start MongoDB Service
+```bash
+# Windows
+net start MongoDB
+
+# macOS/Linux
+sudo systemctl start mongod
+```
+
+#### Step 3: Import Data
+```bash
+# Navigate to sample_database directory
+cd sample_database
+
+# Import movies
+mongoimport --db alflix --collection movies --file movies.json --jsonArray
+
+# Import subscriptions
+mongoimport --db alflix --collection subscriptions --file subscriptions.json --jsonArray
+```
+
+### Option 3: Using MongoDB Compass (GUI)
+
+1. Download and install [MongoDB Compass](https://www.mongodb.com/products/compass)
+2. Connect to your MongoDB instance (local or Atlas)
+3. Create a new database called `alflix`
+4. Create two collections: `movies` and `subscriptions`
+5. Use the "Add Data" → "Import File" feature for each JSON file
+
+### 📊 Database Schema Overview
+
+#### Movies Collection
+```json
+{
+  "_id": "ObjectId",
+  "title": "String",
+  "poster": "String (URL)",
+  "description": "String",
+  "rating": "Number",
+  "video": "String (YouTube URL)",
+  "imgHeader": "String (URL)",
+  "imgSubheader": "String (URL)",
+  "year": "Number",
+  "quote": "String",
+  "tags": [
+    {
+      "id": "Number",
+      "name": "String",
+      "_id": "ObjectId"
+    }
+  ],
+  "cast": [
+    {
+      "castPicture": "String (URL)",
+      "actorName": "String",
+      "roleName": "String",
+      "_id": "ObjectId"
+    }
+  ],
+  "createdAt": "Date",
+  "updatedAt": "Date"
+}
+```
+
+#### Subscriptions Collection
+```json
+{
+  "_id": "ObjectId",
+  "title": "String",
+  "description": "String",
+  "benefits": ["String"],
+  "normalPrice": "Number",
+  "discountedPrice": "Number"
+}
+```
+
+### 🔧 Troubleshooting
+
+#### Common Issues:
+
+1. **Connection String Format:**
+   ```
+   mongodb+srv://username:password@cluster.mongodb.net/database_name?retryWrites=true&w=majority
+   ```
+
+2. **Authentication Error:**
+   - Ensure username and password are correct
+   - Check if IP address is whitelisted in Atlas
+
+3. **Import Errors:**
+   - Verify JSON files are valid
+   - Check file paths are correct
+   - Ensure sufficient permissions
+
+4. **Collection Already Exists:**
+   ```bash
+   # Drop existing collection first
+   mongoimport --uri "your_connection_string" --collection movies --file movies.json --jsonArray --drop
+   ```
+
+### 📈 Sample Data Statistics
+
+- **Movies Collection**: ~1,000+ movies with complete metadata
+- **Subscriptions Collection**: 3 subscription plans
+- **Total Data Size**: ~1.1MB
+- **Features**: Cast information, ratings, categories, video links
+
 ## 🚀 Running the Application
 
 ### Development Mode
@@ -149,6 +317,9 @@ Alflix/
 │   │   ├── assets/      # Static assets
 │   │   └── App.jsx      # Main app component
 │   └── index.html       # HTML template
+├── sample_database/     # Sample data for import
+│   ├── movies.json      # Movies collection data
+│   └── subscriptions.json # Subscriptions collection data
 └── package.json         # Dependencies and scripts
 ```
 
@@ -208,4 +379,3 @@ This is a group assignment project. For contributions:
 ---
 
 **Alflix** - Your ultimate streaming experience! 🎬✨
-

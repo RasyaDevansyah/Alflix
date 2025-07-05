@@ -1,0 +1,45 @@
+[
+  {
+    "_id": "684c58a0e96263388bc22f4c",
+    "title": "Family Premium",
+    "description": "Family video love language is much more. Enjoy 5–6 users movie nights together without worries.",
+    "benefits": [
+      "No Ads",
+      "Premium Feature Unlocked",
+      "4 to 6 Users",
+      "More Analytics"
+    ],
+    "normalPrice": 109000,
+    "discountedPrice": 79000,
+    "__v": 0
+  },
+  {
+    "_id": "684c58fce96263388bc22f50",
+    "title": "Student Deal",
+    "description": "A great deal for students who love solo movie marathons! (or want background noise while they blast tasks).",
+    "benefits": [
+      "No Ads",
+      "Premium Feature Unlocked",
+      "1 User",
+      "More Analytics"
+    ],
+    "normalPrice": 59000,
+    "discountedPrice": 19000,
+    "__v": 0
+  },
+  {
+    "_id": "684c5909e96263388bc22f52",
+    "title": "Couple’s Love",
+    "description": "Be more romantic and intimate together, enjoy movies & shows together in a happy life!",
+    "benefits": [
+      "No Ads",
+      "Premium Feature Unlocked",
+      "2 Users",
+      "More Analytics",
+      "Valentine’s day specials"
+    ],
+    "normalPrice": 89000,
+    "discountedPrice": 59000,
+    "__v": 0
+  }
+]
