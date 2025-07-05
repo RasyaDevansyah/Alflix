@@ -108,8 +108,6 @@ This project was developed as a collaborative effort for Software Engineering co
 
 ## 🗄️ Database Import Instructions
 
-### Option 1: Using MongoDB Atlas (Recommended)
-
 #### Step 1: Set up MongoDB Atlas
 1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas) and create a free account
 2. Create a new cluster (M0 Free tier is sufficient)
@@ -161,118 +159,6 @@ sudo apt-get install -y mongodb-database-tools
 2. Click on "Browse Collections"
 3. You should see two collections: `movies` and `subscriptions`
 4. Check that the documents are imported correctly
-
-### Option 2: Using Local MongoDB
-
-#### Step 1: Install Local MongoDB
-Follow the [MongoDB Installation Guide](https://docs.mongodb.com/manual/installation/)
-
-#### Step 2: Start MongoDB Service
-```bash
-# Windows
-net start MongoDB
-
-# macOS/Linux
-sudo systemctl start mongod
-```
-
-#### Step 3: Import Data
-```bash
-# Navigate to sample_database directory
-cd sample_database
-
-# Import movies
-mongoimport --db alflix --collection movies --file movies.json --jsonArray
-
-# Import subscriptions
-mongoimport --db alflix --collection subscriptions --file subscriptions.json --jsonArray
-```
-
-### Option 3: Using MongoDB Compass (GUI)
-
-1. Download and install [MongoDB Compass](https://www.mongodb.com/products/compass)
-2. Connect to your MongoDB instance (local or Atlas)
-3. Create a new database called `alflix`
-4. Create two collections: `movies` and `subscriptions`
-5. Use the "Add Data" → "Import File" feature for each JSON file
-
-### 📊 Database Schema Overview
-
-#### Movies Collection
-```json
-{
-  "_id": "ObjectId",
-  "title": "String",
-  "poster": "String (URL)",
-  "description": "String",
-  "rating": "Number",
-  "video": "String (YouTube URL)",
-  "imgHeader": "String (URL)",
-  "imgSubheader": "String (URL)",
-  "year": "Number",
-  "quote": "String",
-  "tags": [
-    {
-      "id": "Number",
-      "name": "String",
-      "_id": "ObjectId"
-    }
-  ],
-  "cast": [
-    {
-      "castPicture": "String (URL)",
-      "actorName": "String",
-      "roleName": "String",
-      "_id": "ObjectId"
-    }
-  ],
-  "createdAt": "Date",
-  "updatedAt": "Date"
-}
-```
-
-#### Subscriptions Collection
-```json
-{
-  "_id": "ObjectId",
-  "title": "String",
-  "description": "String",
-  "benefits": ["String"],
-  "normalPrice": "Number",
-  "discountedPrice": "Number"
-}
-```
-
-### 🔧 Troubleshooting
-
-#### Common Issues:
-
-1. **Connection String Format:**
-   ```
-   mongodb+srv://username:password@cluster.mongodb.net/database_name?retryWrites=true&w=majority
-   ```
-
-2. **Authentication Error:**
-   - Ensure username and password are correct
-   - Check if IP address is whitelisted in Atlas
-
-3. **Import Errors:**
-   - Verify JSON files are valid
-   - Check file paths are correct
-   - Ensure sufficient permissions
-
-4. **Collection Already Exists:**
-   ```bash
-   # Drop existing collection first
-   mongoimport --uri "your_connection_string" --collection movies --file movies.json --jsonArray --drop
-   ```
-
-### 📈 Sample Data Statistics
-
-- **Movies Collection**: ~1,000+ movies with complete metadata
-- **Subscriptions Collection**: 3 subscription plans
-- **Total Data Size**: ~1.1MB
-- **Features**: Cast information, ratings, categories, video links
 
 ## 🚀 Running the Application
 
